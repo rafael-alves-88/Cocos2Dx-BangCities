@@ -55,6 +55,5 @@ static const char gameScene_01_01MusicFile[] = "sound/GameScene_01_01.mp3";
 static const char menuSceneMusicFile[] = "sound/MenuScene.mp3";
 static const char sceneSelectionMusicFile[] = "sound/SceneSelection.mp3";
 static const char stageClearMusicFile[] = "sound/StageClear.mp3";
-static const char stageClearEndFile[] = "sound/StageClearEnd.mp3";
 
 #endif
