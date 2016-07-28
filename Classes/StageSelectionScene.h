@@ -14,6 +14,7 @@ public:
 	void stage1Callback(Ref* sender);
 	void stage2Callback(Ref* sender);
 	void stage3Callback(Ref* sender);
+	void backCallback(Ref* sender);
 };
 
 #endif

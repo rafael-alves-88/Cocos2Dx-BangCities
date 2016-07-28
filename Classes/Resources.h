@@ -40,15 +40,23 @@ static const char uiSoundFxPressed[] = "ui/sfx_pressed.png";
 
 // Game Interface
 static const char panelFile[] = "interface/panel.png";
-static const char stageSelectedFlag[] = "interface/stage_selected.png";
 static const char stage1Flag[] = "interface/stage_1.png";
+static const char stage1FlagPressed[] = "interface/stage_1_pressed.png";
 static const char stage2Flag[] = "interface/stage_2.png";
+static const char stage2FlagPressed[] = "interface/stage_2_pressed.png";
 static const char stage3Flag[] = "interface/stage_3.png";
+static const char stage3FlagPressed[] = "interface/stage_3_pressed.png";
 static const char gameOver[] = "interface/game_over.png";
 static const char victory[] = "interface/victory.png";
 
+// Game Resources
+static const char game_scene_01_floor[] = "res/game_scene_01_floor.png";
+static const char cannon_player[] = "res/cannon.png";
+static const char cannon_gun_player[] = "res/cannon_gun.png";
+
 // Sons
 static const char bossMusicFile[] = "sound/Boss.mp3";
+static const char buttonFxFile[] = "sound/Button.mp3";
 static const char gameOverMusicFile[] = "sound/GameOver.mp3";
 static const char gameResultsMusicFile[] = "sound/GameResults.mp3";
 static const char gameScene_01_01MusicFile[] = "sound/GameScene_01_01.mp3";

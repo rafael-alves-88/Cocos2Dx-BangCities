@@ -72,6 +72,7 @@ bool MenuScene::init()
 // transita para Settings
 void MenuScene::settingsCallback(Ref* sender)
 {
+	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
 	Director::getInstance()->replaceScene(SettingsScene::createScene());
 }
 
@@ -79,11 +80,12 @@ void MenuScene::settingsCallback(Ref* sender)
 void MenuScene::playCallback(Ref* sender)
 {
 	SimpleAudioEngine::getInstance()->stopBackgroundMusic();
+	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
 	Director::getInstance()->replaceScene(StageSelectionScene::createScene());
 }
 
 // transita para o ranking
 void MenuScene::rankingCallback(Ref* sender)
 {
-
+	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
 }

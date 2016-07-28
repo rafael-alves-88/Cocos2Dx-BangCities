@@ -1,5 +1,6 @@
 #include "StageSelectionScene.h"
 #include "SettingsScene.h"
+#include "MenuScene.h"
 #include "Resources.h"
 #include "SimpleAudioEngine.h"
 #include "GameScene01.h"
@@ -40,7 +41,7 @@ bool StageSelectionScene::init()
 	// fase 1
 	auto stage1 = MenuItemImage::create(
 		stage1Flag,
-		stageSelectedFlag,
+		stage1FlagPressed,
 		this,
 		menu_selector(StageSelectionScene::stage1Callback));
 	stage1->setPosition(Vec2(size.width * 0.25f, size.height * 0.55f));
@@ -55,10 +56,11 @@ bool StageSelectionScene::init()
 	// fase 2
 	auto stage2 = MenuItemImage::create(
 		stage2Flag,
-		stageSelectedFlag,
+		stage2FlagPressed,
 		this,
 		menu_selector(StageSelectionScene::stage2Callback));
 	stage2->setPosition(Vec2(size.width * 0.50f, size.height * 0.55f));
+	stage2->setOpacity(100);
 
 	// label de fase 2
 	auto labelStage2 = Label::createWithTTF(ttfConfig, "Sao Paulo", TextHAlignment::CENTER);
@@ -70,10 +72,11 @@ bool StageSelectionScene::init()
 	// fase 3
 	auto stage3 = MenuItemImage::create(
 		stage3Flag,
-		stageSelectedFlag,
+		stage3FlagPressed,
 		this,
 		menu_selector(StageSelectionScene::stage3Callback));
 	stage3->setPosition(Vec2(size.width * 0.75f, size.height * 0.55f));
+	stage3->setOpacity(100);
 
 	// label de fase 3
 	auto labelStage3 = Label::createWithTTF(ttfConfig, "Rio de Janeiro", TextHAlignment::CENTER);
@@ -82,8 +85,16 @@ bool StageSelectionScene::init()
 	labelStage3->setSystemFontSize(30);
 	this->addChild(labelStage3);
 
+	// cria item de voltar
+	auto backItem = MenuItemImage::create(
+		uiBackNormal,
+		uiBackPressed,
+		this,
+		menu_selector(StageSelectionScene::backCallback));
+	backItem->setPosition(Vec2(size.width * 0.85f, size.height * 0.20f));
+
 	// menu com opções
-	auto menu = Menu::create(stage1, stage2, stage3, NULL);
+	auto menu = Menu::create(stage1, stage2, stage3, backItem, NULL);
 	menu->setPosition(Vec2::ZERO);
 	this->addChild(menu);
 
@@ -93,6 +104,7 @@ bool StageSelectionScene::init()
 // transita para a GameScene 1
 void StageSelectionScene::stage1Callback(Ref* sender)
 {
+	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
 	SimpleAudioEngine::getInstance()->stopBackgroundMusic();
 	Director::getInstance()->replaceScene(GameScene01::createScene());
 }
@@ -100,6 +112,7 @@ void StageSelectionScene::stage1Callback(Ref* sender)
 // transita para a GameScene 2
 void StageSelectionScene::stage2Callback(Ref* sender)
 {
+	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
 	//SimpleAudioEngine::getInstance()->stopBackgroundMusic();
 	//Director::getInstance()->replaceScene(GameScene02::createScene());
 }
@@ -107,6 +120,14 @@ void StageSelectionScene::stage2Callback(Ref* sender)
 // transita para a GameScene 3
 void StageSelectionScene::stage3Callback(Ref* sender)
 {
+	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
 	//SimpleAudioEngine::getInstance()->stopBackgroundMusic();
 	//Director::getInstance()->replaceScene(GameScene03::createScene());
+}
+
+void StageSelectionScene::backCallback(Ref* sender)
+{
+	// retorna para MenuScene
+	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	Director::getInstance()->replaceScene(MenuScene::createScene());
 }

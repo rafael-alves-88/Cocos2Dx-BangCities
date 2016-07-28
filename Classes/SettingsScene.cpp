@@ -91,15 +91,17 @@ bool SettingsScene::init()
 
 void SettingsScene::musicCallback(Ref* sender)
 {
-	
+	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
 }
 
 void SettingsScene::sfxCallback(Ref* sender)
 {
+	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
 }
 
 void SettingsScene::backCallback(Ref* sender)
 {
 	// retorna para MenuScene
+	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
 	Director::getInstance()->replaceScene(MenuScene::createScene());
 }

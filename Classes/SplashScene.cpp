@@ -56,6 +56,7 @@ void SplashScene::loadTextures()
 void SplashScene::loadSounds()
 {
 	SimpleAudioEngine::getInstance()->preloadBackgroundMusic(bossMusicFile);
+	SimpleAudioEngine::getInstance()->preloadEffect(buttonFxFile);
 	SimpleAudioEngine::getInstance()->preloadBackgroundMusic(gameOverMusicFile);
 	SimpleAudioEngine::getInstance()->preloadBackgroundMusic(gameResultsMusicFile);
 	SimpleAudioEngine::getInstance()->preloadBackgroundMusic(gameScene_01_01MusicFile);

@@ -76,7 +76,6 @@ bool GameScene01::init()
 	schedule(schedule_selector(GameScene01::updateGameLogic), .5f);
 
 
-
 	// botões temporários
 	// cria item de game over
 	auto gameOver = MenuItemImage::create(
@@ -84,7 +83,7 @@ bool GameScene01::init()
 		uiClosePressed,
 		this,
 		menu_selector(GameScene01::gameOverCallback));
-	gameOver->setPosition(Vec2(size.width * 0.85f, size.height * 0.25f));
+	gameOver->setPosition(Vec2(size.width * 0.85f, size.height * 0.65f));
 
 	// cria item de vitória
 	auto victory = MenuItemImage::create(
@@ -92,7 +91,7 @@ bool GameScene01::init()
 		uiNextPressed,
 		this,
 		menu_selector(GameScene01::victoryCallback));
-	victory->setPosition(Vec2(size.width * 0.65f, size.height * 0.25f));
+	victory->setPosition(Vec2(size.width * 0.65f, size.height * 0.65f));
 
 	// cria menu e adiciona item
 	auto menu = Menu::create(gameOver, victory, NULL);
@@ -128,11 +127,24 @@ void GameScene01::initBackground()
 	background->setPosition(Vec2(size.width / 2, size.height / 2));
 	background->setOpacity(150);
 	this->addChild(background);
+
+	// criando sprite de chão
+	floor = Sprite::create(game_scene_01_floor);
+	floor->setPosition(Vec2(size.width / 2, floor->getContentSize().height / 2));
+	this->addChild(floor);
 }
 
 void GameScene01::initGameObjects()
 {
-	
+	// criando lança mísseis
+	cannon_gun = Sprite::create(cannon_gun_player);
+	cannon_gun->setPosition(Vec2(size.width * 0.21f, size.height * 0.26f));
+	this->addChild(cannon_gun);
+
+	// criando sprite do canhão do jogador
+	cannon = Sprite::create(cannon_player);
+	cannon->setPosition(Vec2(size.width * 0.20f, size.height * 0.20f));
+	this->addChild(cannon);
 }
 
 // usuário tocou na tela
@@ -179,7 +191,7 @@ void GameScene01::onTouchCancelled(Touch* touch, Event* pEvent)
 void GameScene01::pauseGame()
 {
 	isPaused = !(isPaused);
-
+	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
 	if (isPaused)
 	{
 		Director::getInstance()->pause();
@@ -198,6 +210,7 @@ void GameScene01::quitGame()
 	pauseLayer->setVisible(false);
 	Director::getInstance()->resume();
 	unscheduleUpdate();
+	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
 	SimpleAudioEngine::getInstance()->stopBackgroundMusic();
 	Director::getInstance()->replaceScene(MenuScene::createScene());
 }
@@ -251,12 +264,14 @@ void GameScene01::update(float dt)
 
 void GameScene01::gameOverCallback(Ref* sender)
 {
-	// vai para Game Over
+	// vai para Tela de Game Over
+	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
 	Director::getInstance()->replaceScene(GameOverScene::createScene());
 }
 
 void GameScene01::victoryCallback(Ref* sender)
 {
-	// vai para Vitória
+	// vai para Tela de Vitória
+	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
 	Director::getInstance()->replaceScene(VictoryScene::createScene());
 }

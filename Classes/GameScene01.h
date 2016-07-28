@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include "PauseLayer.h"
 #include "HudLayer.h"
+#include "Cannon.h"
 
 using namespace cocos2d;
 
@@ -33,13 +34,16 @@ public:
 
 	void updateSwipeInput(float dt);
 	void updateGameLogic(float dt);
-	void updateScore(int pointsToAdd);
 
 	static HudLayer* hudLayer;
 	static PauseLayer* pauseLayer;
 	
 	void gameOverCallback(Ref* sender);
 	void victoryCallback(Ref* sender);
+
+	Sprite* cannon_gun;
+	Sprite* cannon;
+	Sprite* floor;
 
 private:
 	Size size;
