@@ -1,6 +1,6 @@
 == Bang Cities - 9MOB ==
 
-Jogo de tiro
+Jogo de tiro utilizando http://www.cocos2d-x.org/[Cocos2d-x] com https://pt.wikipedia.org/wiki/C%2B%2B[C++]
 
 === Referências ===
 
