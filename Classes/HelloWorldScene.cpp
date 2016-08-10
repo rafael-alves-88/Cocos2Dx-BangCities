@@ -72,15 +72,27 @@ bool HelloWorld::init()
     ground->setPosition(Vec2(0,0));
     this->addChild(ground, 0);
     
-    // Adicionando arma do canhao
+    // Adicionando arma do canhao (Player 1)
     auto cannon_gun = Sprite::create("res/cannon_gun.png");
     cannon_gun->setPosition(Vec2(150 + origin.x, ground->getBoundingBox().size.height + 80));
     this->addChild(cannon_gun, 0);
     
-    // Adicionando canhao
+    // Adicionando canhao (Player 1)
     Sprite *cannon = Sprite::create("res/cannon.png");
     cannon->setPosition(Vec2(100 + origin.x, ground->getBoundingBox().size.height + 35));
     this->addChild(cannon, 0);
+    
+    // Adicionando arma do canhao (Player 2 - Maquina)
+    auto cannon_gun2 = Sprite::create("res/cannon_gun.png");
+    cannon_gun2->setPosition(Vec2(visibleSize.width - 150, ground->getBoundingBox().size.height + 80));
+    cannon_gun2->setFlippedX(true);
+    this->addChild(cannon_gun2, 0);
+
+    // Adicionando canhao (Player 2 - Maquina)
+    Sprite *cannon2 = Sprite::create("res/cannon.png");
+    cannon2->setPosition(Vec2(visibleSize.width - 100, ground->getBoundingBox().size.height + 35));
+    cannon2->setFlippedX(true);
+    this->addChild(cannon2, 0);
     
     return true;
 }
