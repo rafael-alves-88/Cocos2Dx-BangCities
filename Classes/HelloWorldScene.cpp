@@ -65,33 +65,22 @@ bool HelloWorld::init()
 
     // add the label as a child to this layer
     this->addChild(label, 1);
-
-    // add "HelloWorld" splash screen"
-    //auto sprite = Sprite::create("HelloWorld.png");
-
-    // position the sprite on the center of the screen
-    //sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
-
-    // add the sprite as a child to this layer
-    //this->addChild(sprite, 0);
     
-    Sprite *cannon_gun = Sprite::create("res/cannon_gun.png");
-    cannon_gun->setPosition(Vec2(cannon_gun->getBoundingBox().size.width/2 + origin.x, visibleSize.height/2 + origin.y));
-    
-    this->addChild(cannon_gun, 0);
-    
-    auto cannon = Sprite::create("res/cannon.png");
-    cannon->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
-    
-    this->addChild(cannon, 0);
-    
-    
+    // Adicionando terreno
     Sprite *ground = Sprite::create("res/game_scene_01_floor.png");
     ground->setAnchorPoint(Vec2(0,0));
-    //ground->setPosition(Vec2(0, ground->getBoundingBox().size.height));
     ground->setPosition(Vec2(0,0));
-    
     this->addChild(ground, 0);
+    
+    // Adicionando arma do canhao
+    auto cannon_gun = Sprite::create("res/cannon_gun.png");
+    cannon_gun->setPosition(Vec2(150 + origin.x, ground->getBoundingBox().size.height + 80));
+    this->addChild(cannon_gun, 0);
+    
+    // Adicionando canhao
+    Sprite *cannon = Sprite::create("res/cannon.png");
+    cannon->setPosition(Vec2(100 + origin.x, ground->getBoundingBox().size.height + 35));
+    this->addChild(cannon, 0);
     
     return true;
 }
