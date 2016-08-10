@@ -23,10 +23,12 @@ bool HelloWorld::init()
 {
     //////////////////////////////
     // 1. super init first
-    if ( !Layer::init() )
+    if ( !LayerColor::initWithColor(Color4B(Color4B::WHITE)))
     {
         return false;
     }
+    
+    //this->setColor(Color3B(51, 153, 255));
     
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -55,7 +57,7 @@ bool HelloWorld::init()
     // add a label shows "Hello World"
     // create and initialize a label
     
-    auto label = Label::createWithTTF("Hello World", "fonts/Marker Felt.ttf", 24);
+    auto label = Label::createWithTTF("Bang Cities - 9MOB", "fonts/Marker Felt.ttf", 48);
     
     // position the label on the center of the screen
     label->setPosition(Vec2(origin.x + visibleSize.width/2,
@@ -65,13 +67,29 @@ bool HelloWorld::init()
     this->addChild(label, 1);
 
     // add "HelloWorld" splash screen"
-    auto sprite = Sprite::create("HelloWorld.png");
+    //auto sprite = Sprite::create("HelloWorld.png");
 
     // position the sprite on the center of the screen
-    sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
+    //sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
 
     // add the sprite as a child to this layer
-    this->addChild(sprite, 0);
+    //this->addChild(sprite, 0);
+    
+    Sprite *cannon_gun = Sprite::create("res/cannon_gun.png");
+    cannon_gun->setPosition(Vec2(cannon_gun->getBoundingBox().size.width/2 + origin.x, visibleSize.height/2 + origin.y));
+    
+    this->addChild(cannon_gun, 0);
+    
+    auto cannon = Sprite::create("res/cannon.png");
+    cannon->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
+    
+    this->addChild(cannon, 0);
+    
+    
+    Sprite *ground = Sprite::create("res/game_scene_01_floor.png");
+    ground->setPosition(Vec2(0, ground->getBoundingBox().size.height));
+    
+    this->addChild(ground, 0);
     
     return true;
 }
