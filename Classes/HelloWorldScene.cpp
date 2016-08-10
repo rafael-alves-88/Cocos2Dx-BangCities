@@ -23,7 +23,7 @@ bool HelloWorld::init()
 {
     //////////////////////////////
     // 1. super init first
-    if ( !LayerColor::initWithColor(Color4B(Color4B::WHITE)))
+    if ( !LayerColor::initWithColor(Color4B(Color4B::ORANGE)))
     {
         return false;
     }
@@ -87,7 +87,9 @@ bool HelloWorld::init()
     
     
     Sprite *ground = Sprite::create("res/game_scene_01_floor.png");
-    ground->setPosition(Vec2(0, ground->getBoundingBox().size.height));
+    ground->setAnchorPoint(Vec2(0,0));
+    //ground->setPosition(Vec2(0, ground->getBoundingBox().size.height));
+    ground->setPosition(Vec2(0,0));
     
     this->addChild(ground, 0);
     
