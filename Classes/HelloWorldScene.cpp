@@ -94,9 +94,39 @@ bool HelloWorld::init()
     cannon2->setFlippedX(true);
     this->addChild(cannon2, 0);
     
+    // Para travar o evento de touch
+    auto touchListener = EventListenerTouchOneByOne::create();
+
+    touchListener->onTouchBegan = CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
+    touchListener->onTouchEnded = CC_CALLBACK_2(HelloWorld::onTouchEnded, this);
+    touchListener->onTouchMoved = CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
+    touchListener->onTouchCancelled = CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
+    
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+    
     return true;
 }
 
+bool HelloWorld::onTouchBegan(Touch* touch, Event* event)
+{
+    cocos2d::log("touch began");
+    return true;
+}
+
+void HelloWorld::onTouchEnded(Touch* touch, Event* event)
+{
+    cocos2d::log("touch ended");
+}
+
+void HelloWorld::onTouchMoved(Touch* touch, Event* event)
+{
+    cocos2d::log("touch moved");
+}
+
+void HelloWorld::onTouchCancelled(Touch* touch, Event* event)
+{
+    cocos2d::log("touch cancelled");
+}
 
 void HelloWorld::menuCloseCallback(Ref* pSender)
 {
