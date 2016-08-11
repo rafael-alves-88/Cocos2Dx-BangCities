@@ -18,6 +18,8 @@ public:
     virtual void onTouchMoved(cocos2d::Touch*, cocos2d::Event*);
     virtual void onTouchCancelled(cocos2d::Touch*, cocos2d::Event*);
     
+    bool onContactBegan(cocos2d::PhysicsContact &contact);
+
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
 

@@ -126,6 +126,12 @@ bool HelloWorld::init()
     
     _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
     
+    // Sobre a colisao: Finally, you need to register to receive contact notifications...
+    // https://www.raywenderlich.com/95835/cocos2d-x-tutorial-beginners
+    auto contactListener = EventListenerPhysicsContact::create();
+    contactListener->onContactBegin = CC_CALLBACK_1(HelloWorld::onContactBegan, this);
+    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
+    
     return true;
 }
 
@@ -181,6 +187,18 @@ void HelloWorld::onTouchMoved(Touch* touch, Event* event)
 void HelloWorld::onTouchCancelled(Touch* touch, Event* event)
 {
     cocos2d::log("touch cancelled");
+}
+
+bool HelloWorld::onContactBegan(PhysicsContact &contact)
+{
+    cocos2d::log("on contact began");
+    auto particle = ParticleSmoke::createWithTotalParticles(300);
+    particle->setDuration(0.5f);
+    particle->setPosition(Vec2(_cannon_gun2->getPosition()));
+    this->addChild(particle);
+    particle->setAutoRemoveOnFinish(true);
+    
+    return true;
 }
 
 void HelloWorld::menuCloseCallback(Ref* pSender)
