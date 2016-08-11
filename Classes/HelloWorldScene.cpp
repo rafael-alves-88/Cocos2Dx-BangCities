@@ -122,6 +122,7 @@ bool HelloWorld::onTouchBegan(Touch* touch, Event* event)
     
     auto bullet = Sprite::create("res/Bullet-Bill-icon.png");
     bullet->setPosition(_cannon_gun->getPosition());
+    bullet->setFlippedX(true);
     this->addChild(bullet);
     
     offset.normalize();
