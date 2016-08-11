@@ -67,32 +67,32 @@ bool HelloWorld::init()
     this->addChild(label, 1);
     
     // Adicionando terreno
-    Sprite *ground = Sprite::create("res/game_scene_01_floor.png");
-    ground->setAnchorPoint(Vec2(0,0));
-    ground->setPosition(Vec2(0,0));
-    this->addChild(ground, 0);
+    _ground = Sprite::create("res/game_scene_01_floor.png");
+    _ground->setAnchorPoint(Vec2(0,0));
+    _ground->setPosition(Vec2(0,0));
+    this->addChild(_ground, 0);
     
     // Adicionando arma do canhao (Player 1)
-    auto cannon_gun = Sprite::create("res/cannon_gun.png");
-    cannon_gun->setPosition(Vec2(150 + origin.x, ground->getBoundingBox().size.height + 80));
-    this->addChild(cannon_gun, 0);
+    _cannon_gun = Sprite::create("res/cannon_gun.png");
+    _cannon_gun->setPosition(Vec2(150 + origin.x, _ground->getBoundingBox().size.height + 80));
+    this->addChild(_cannon_gun, 0);
     
     // Adicionando canhao (Player 1)
-    Sprite *cannon = Sprite::create("res/cannon.png");
-    cannon->setPosition(Vec2(100 + origin.x, ground->getBoundingBox().size.height + 35));
-    this->addChild(cannon, 0);
+    _cannon = Sprite::create("res/cannon.png");
+    _cannon->setPosition(Vec2(100 + origin.x, _ground->getBoundingBox().size.height + 35));
+    this->addChild(_cannon, 0);
     
     // Adicionando arma do canhao (Player 2 - Maquina)
-    auto cannon_gun2 = Sprite::create("res/cannon_gun.png");
-    cannon_gun2->setPosition(Vec2(visibleSize.width - 150, ground->getBoundingBox().size.height + 80));
-    cannon_gun2->setFlippedX(true);
-    this->addChild(cannon_gun2, 0);
+    _cannon_gun2 = Sprite::create("res/cannon_gun.png");
+    _cannon_gun2->setPosition(Vec2(visibleSize.width - 150, _ground->getBoundingBox().size.height + 80));
+    _cannon_gun2->setFlippedX(true);
+    this->addChild(_cannon_gun2, 0);
 
     // Adicionando canhao (Player 2 - Maquina)
-    Sprite *cannon2 = Sprite::create("res/cannon.png");
-    cannon2->setPosition(Vec2(visibleSize.width - 100, ground->getBoundingBox().size.height + 35));
-    cannon2->setFlippedX(true);
-    this->addChild(cannon2, 0);
+    _cannon2 = Sprite::create("res/cannon.png");
+    _cannon2->setPosition(Vec2(visibleSize.width - 100, _ground->getBoundingBox().size.height + 35));
+    _cannon2->setFlippedX(true);
+    this->addChild(_cannon2, 0);
     
     // Para travar o evento de touch
     auto touchListener = EventListenerTouchOneByOne::create();
@@ -107,9 +107,32 @@ bool HelloWorld::init()
     return true;
 }
 
+// seguindo https://www.raywenderlich.com/95835/cocos2d-x-tutorial-beginners
+// no trecho: Then implement your callback in HelloWorldScene.cpp:
 bool HelloWorld::onTouchBegan(Touch* touch, Event* event)
 {
     cocos2d::log("touch began");
+    
+    Vec2 touchLocation = touch->getLocation();
+    Vec2 offset = touchLocation - _cannon_gun->getPosition();
+
+    if (offset.x < 0) {
+        return true;
+    }
+    
+    auto bullet = Sprite::create("res/Bullet-Bill-icon.png");
+    bullet->setPosition(_cannon_gun->getPosition());
+    this->addChild(bullet);
+    
+    offset.normalize();
+    auto shootAmount = offset * 1000;
+    
+    auto realDest = shootAmount + bullet->getPosition();
+    
+    auto actionMove = MoveTo::create(2.0f, realDest);
+    auto actionRemove = RemoveSelf::create();
+    bullet->runAction(Sequence::create(actionMove, actionRemove, nullptr));
+
     return true;
 }
 
