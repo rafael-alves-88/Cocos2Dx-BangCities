@@ -6,7 +6,9 @@ USING_NS_CC;
 Scene* HelloWorld::createScene()
 {
     // 'scene' is an autorelease object
-    auto scene = Scene::create();
+    auto scene = Scene::createWithPhysics();
+    scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
+    scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
     
     // 'layer' is an autorelease object
     auto layer = HelloWorld::create();
@@ -17,6 +19,13 @@ Scene* HelloWorld::createScene()
     // return the scene
     return scene;
 }
+
+enum class PhysicsCategory {
+    None = 0,
+    Cannon = (1 << 0),             // 1
+    Projectile = (1 << 1),         // 2
+    All = PhysicsCategory::Cannon | PhysicsCategory::Projectile // 3
+};
 
 // on "init" you need to initialize your instance
 bool HelloWorld::init()
@@ -92,6 +101,19 @@ bool HelloWorld::init()
     _cannon2 = Sprite::create("res/cannon.png");
     _cannon2->setPosition(Vec2(visibleSize.width - 100, _ground->getBoundingBox().size.height + 35));
     _cannon2->setFlippedX(true);
+    
+    // Sobre a colisao
+    auto cannonSize = _cannon_gun2->getContentSize();
+    auto physicsBody = PhysicsBody::createBox(Size(cannonSize.width, cannonSize.height),
+                                              PhysicsMaterial(0.1f, 1.0f, 0.0f));
+    
+    physicsBody->setDynamic(true);
+    physicsBody->setCategoryBitmask((int)PhysicsCategory::Cannon);
+    physicsBody->setCollisionBitmask((int)PhysicsCategory::None);
+    physicsBody->setContactTestBitmask((int)PhysicsCategory::Projectile);
+    
+    _cannon_gun2->setPhysicsBody(physicsBody);
+    
     this->addChild(_cannon2, 0);
     
     // Para travar o evento de touch
@@ -123,6 +145,15 @@ bool HelloWorld::onTouchBegan(Touch* touch, Event* event)
     auto bullet = Sprite::create("res/Bullet-Bill-icon.png");
     bullet->setPosition(_cannon_gun->getPosition());
     bullet->setFlippedX(true);
+    // Sobre a colisao
+    auto bulletSize = bullet->getContentSize();
+    auto physicsBody = PhysicsBody::createCircle(bulletSize.width/2);
+    physicsBody->setDynamic(true);
+    physicsBody->setCategoryBitmask((int)PhysicsCategory::Projectile);
+    physicsBody->setCollisionBitmask((int)PhysicsCategory::None);
+    physicsBody->setContactTestBitmask((int)PhysicsCategory::Cannon);
+    bullet->setPhysicsBody(physicsBody);
+    
     this->addChild(bullet);
     
     offset.normalize();
