@@ -18,8 +18,8 @@ http://soundbible.com/tags-explosion.html[Sons utilizados]
 
 http://www.cocos2d-x.org/attachments/download/1563
 
-![alt tag](http://cocos2d-x.org/docs/programmers-guide/basic_concepts-img/2n_annotated_scaled.png)
+image::http://cocos2d-x.org/docs/programmers-guide/basic_concepts-img/2n_annotated_scaled.png
 
 http://www.cocos2d-x.org/wiki/Coordinate_System
 
-![alt tag](http://www.programering.com/images/remote/ZnJvbT1jc2RuJnVybD1RM2NoVkVhMFYzYlQ5U2UwbG1kaEozWnZBek52VW1kczkyY3psR1p2MFRQQjEwUUd0V1VDcEVNSjlDYnNsbVp2QURNMDhTWjZsMmMwNTJibTlDVnl3VU5NWlRZMThDZHU5bVp2MFRQUkZHZTFjVld4Z21NWlpuVnpvbGRSaGxXMVZUYWl0bVR6a1ZkakpqWXpwa01NWjNiRU5HTVNoVVl2UUhlbFIzTHk4eWF5RldieVZHZGhkM1B3QVROeklqTXpFVE0yRVRNd1FUTXdJekwwVm1idTRHWnpObUxuOUdiaTV5WnRsMkx2b0RjMFJIYQ.jpg)
+image::http://www.programering.com/images/remote/ZnJvbT1jc2RuJnVybD1RM2NoVkVhMFYzYlQ5U2UwbG1kaEozWnZBek52VW1kczkyY3psR1p2MFRQQjEwUUd0V1VDcEVNSjlDYnNsbVp2QURNMDhTWjZsMmMwNTJibTlDVnl3VU5NWlRZMThDZHU5bVp2MFRQUkZHZTFjVld4Z21NWlpuVnpvbGRSaGxXMVZUYWl0bVR6a1ZkakpqWXpwa01NWjNiRU5HTVNoVVl2UUhlbFIzTHk4eWF5RldieVZHZGhkM1B3QVROeklqTXpFVE0yRVRNd1FUTXdJekwwVm1idTRHWnpObUxuOUdiaTV5WnRsMkx2b0RjMFJIYQ.jpg
