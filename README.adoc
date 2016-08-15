@@ -6,6 +6,8 @@ Jogo de tiro utilizando http://www.cocos2d-x.org/[Cocos2d-x] com https://pt.wiki
 
 http://file.allitebooks.com/20160103/Cocos2d-x%20Cookbook.pdf[Cocos2d-x Cookbook]
 
+http://www.cocos2d-x.org/wiki/Chapter_4_-_How_to_Fire_some_Bullets[How to fire some Bullets]
+
 http://stackoverflow.com/questions/11074550/gun-shooting-in-cocos2d[Gun shooting in Cocos2d-x]
 
 https://www.raywenderlich.com/25736/how-to-make-a-simple-iphone-game-with-cocos2d-2-x-tutorial[How to make a simple iphone game with cocos2d]
@@ -14,12 +16,12 @@ https://www.raywenderlich.com/25791/rotating-turrets-how-to-make-a-simple-iphone
 
 https://www.raywenderlich.com/28602/intro-to-box2d-with-cocos2d-2-x-tutorial-bouncing-balls[Intro to Box2d with Cocos2d-x - Tutorial Bouncing Balls]
 
+http://www.cocos2d-x.org/wiki/Chapter_6_-_How_to_Play_Music_and_Sound_Effect[How to Play Music and Sound Effect]
+
 http://soundbible.com/tags-explosion.html[Sons utilizados]
 
 http://www.cocos2d-x.org/attachments/download/1563
 
-image::http://cocos2d-x.org/docs/programmers-guide/basic_concepts-img/2n_annotated_scaled.png
+http://cocos2d-x.org/docs/programmers-guide/basic_concepts-img/2n_annotated_scaled.png
 
 http://www.cocos2d-x.org/wiki/Coordinate_System
-
-image::http://www.programering.com/images/remote/ZnJvbT1jc2RuJnVybD1RM2NoVkVhMFYzYlQ5U2UwbG1kaEozWnZBek52VW1kczkyY3psR1p2MFRQQjEwUUd0V1VDcEVNSjlDYnNsbVp2QURNMDhTWjZsMmMwNTJibTlDVnl3VU5NWlRZMThDZHU5bVp2MFRQUkZHZTFjVld4Z21NWlpuVnpvbGRSaGxXMVZUYWl0bVR6a1ZkakpqWXpwa01NWjNiRU5HTVNoVVl2UUhlbFIzTHk4eWF5RldieVZHZGhkM1B3QVROeklqTXpFVE0yRVRNd1FUTXdJekwwVm1idTRHWnpObUxuOUdiaTV5WnRsMkx2b0RjMFJIYQ.jpg
