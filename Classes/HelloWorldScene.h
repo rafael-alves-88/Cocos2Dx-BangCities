@@ -24,14 +24,16 @@ public:
     CREATE_FUNC(HelloWorld);
 
 private:
+    // terreno
     cocos2d::Sprite* _ground;
     
+    // canhao 1
     cocos2d::Sprite* _cannon_gun;
     cocos2d::Sprite* _cannon;
     
+    // canhao 2
     cocos2d::Sprite* _cannon_gun2;
     cocos2d::Sprite* _cannon2;
-    
     
 };
 

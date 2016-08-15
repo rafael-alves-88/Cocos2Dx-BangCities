@@ -66,7 +66,7 @@ bool HelloWorld::init()
     // add a label shows "Hello World"
     // create and initialize a label
     
-    auto label = Label::createWithTTF("Bang Cities - 9MOB", "fonts/Marker Felt.ttf", 48);
+    auto label = Label::createWithTTF("Bang Cities - Fase 1 - Rio de Janeiro", "fonts/Marker Felt.ttf", 48);
     
     // position the label on the center of the screen
     label->setPosition(Vec2(origin.x + visibleSize.width/2,
@@ -170,6 +170,10 @@ bool HelloWorld::onTouchBegan(Touch* touch, Event* event)
     auto actionMove = MoveTo::create(2.0f, realDest);
     auto actionRemove = RemoveSelf::create();
     bullet->runAction(Sequence::create(actionMove, actionRemove, nullptr));
+    
+    // som do canhao
+    auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+    audio->playEffect("res/sounds/canhao.mp3", false, 1.0f, 1.0f, 1.0f);
 
     return true;
 }
@@ -191,6 +195,10 @@ void HelloWorld::onTouchCancelled(Touch* touch, Event* event)
 
 bool HelloWorld::onContactBegan(PhysicsContact &contact)
 {
+    // som da explosao
+    auto audioExplosion = CocosDenshion::SimpleAudioEngine::getInstance();
+    audioExplosion->playEffect("res/sounds/explosion.mp3", false, 1.0f, 1.0f, 1.0f);
+    
     cocos2d::log("on contact began");
     auto particle = ParticleSmoke::createWithTotalParticles(300);
     particle->setDuration(0.5f);
