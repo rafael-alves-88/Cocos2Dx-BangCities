@@ -26,6 +26,9 @@ public:
     CREATE_FUNC(HelloWorld);
 
 private:
+    // label para msg de vitoria!!
+    cocos2d::Label* _labelWin;
+    
     // label com porcentabem de vida
     cocos2d::Label* _labelLifeCannon2;
     

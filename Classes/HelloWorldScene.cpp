@@ -83,6 +83,14 @@ bool HelloWorld::init()
     // add the label as a child to this layer
     this->addChild(label, 1);
     
+    // label pra mostrar msg de vitoria
+    _labelWin = Label::createWithTTF("", "fonts/Marker Felt.ttf", 60);
+    _labelWin->setColor(Color3B::BLACK);
+    _labelWin->setPosition(Vec2(origin.x + visibleSize.width/2,
+                                origin.y + visibleSize.height/2));
+    
+    this->addChild(_labelWin);
+    
     // label com a porcentagem (vida) do tanque 2
     _labelLifeCannon2 = Label::createWithTTF("100%", "fonts/Marker Felt.ttf", 48);
     
@@ -232,8 +240,14 @@ bool HelloWorld::onContactBegan(PhysicsContact &contact)
         this->removeChild(_cannon2);
         
         // faz alguma coisa pra mostrar que o jogo acabou...
+        _labelWin->setString("Parabens Capitao! Missao Cumprida!");
         
-        
+        // toca musica da vitoria
+        // baixada de https://www.freesound.org/people/LittleRobotSoundFactory/sounds/321044/
+        auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+
+        // set the background music and play it just once.
+        audio->playBackgroundMusic("res/sounds/victory.m4a", false);
         
     } else {
         // som da explosao
