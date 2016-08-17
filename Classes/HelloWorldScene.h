@@ -19,6 +19,8 @@ public:
     virtual void onTouchCancelled(cocos2d::Touch*, cocos2d::Event*);
     
     bool onContactBegan(cocos2d::PhysicsContact &contact);
+    
+    bool canExplodeTarget();
 
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
@@ -35,6 +37,7 @@ private:
     cocos2d::Sprite* _cannon_gun2;
     cocos2d::Sprite* _cannon2;
     
+    int _countHitTarget1;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

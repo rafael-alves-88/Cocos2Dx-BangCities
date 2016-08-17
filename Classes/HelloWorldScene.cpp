@@ -3,6 +3,9 @@
 
 USING_NS_CC;
 
+// contagem de acertos no tanque 2
+int _countHitTarget2;
+
 Scene* HelloWorld::createScene()
 {
     // 'scene' is an autorelease object
@@ -15,7 +18,7 @@ Scene* HelloWorld::createScene()
 
     // add layer as a child to scene
     scene->addChild(layer);
-
+    
     // return the scene
     return scene;
 }
@@ -38,6 +41,8 @@ bool HelloWorld::init()
     }
     
     //this->setColor(Color3B(51, 153, 255));
+    
+    _countHitTarget1 = 0;
     
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -66,7 +71,7 @@ bool HelloWorld::init()
     // add a label shows "Hello World"
     // create and initialize a label
     
-    auto label = Label::createWithTTF("Bang Cities - Fase 1 - Rio de Janeiro", "fonts/Marker Felt.ttf", 48);
+    auto label = Label::createWithTTF("Bang Cities - Rio de Janeiro", "fonts/Marker Felt.ttf", 48);
     
     // position the label on the center of the screen
     label->setPosition(Vec2(origin.x + visibleSize.width/2,
@@ -195,18 +200,51 @@ void HelloWorld::onTouchCancelled(Touch* touch, Event* event)
 
 bool HelloWorld::onContactBegan(PhysicsContact &contact)
 {
-    // som da explosao
-    auto audioExplosion = CocosDenshion::SimpleAudioEngine::getInstance();
-    audioExplosion->playEffect("res/sounds/explosion.mp3", false, 1.0f, 1.0f, 1.0f);
-    
     cocos2d::log("on contact began");
-    auto particle = ParticleSmoke::createWithTotalParticles(300);
-    particle->setDuration(0.5f);
-    particle->setPosition(Vec2(_cannon_gun2->getPosition()));
-    this->addChild(particle);
-    particle->setAutoRemoveOnFinish(true);
+
+    if (canExplodeTarget()) {
+        // som da explosao
+        auto audioExplosion = CocosDenshion::SimpleAudioEngine::getInstance();
+        audioExplosion->playEffect("res/sounds/explosion.mp3", false, 1.0f, 1.0f, 1.0f);
+        
+        // explode
+        auto particle = ParticleFire::createWithTotalParticles(300);
+        particle->setDuration(0.5f);
+        particle->setPosition(Vec2(_cannon_gun2->getPosition()));
+        this->addChild(particle);
+        particle->setAutoRemoveOnFinish(true);
+        
+        // remove a arma do canhão 2
+        this->removeChild(_cannon_gun2);
+        
+        // faz alguma coisa pra mostrar que o jogo acabou...
+        
+    } else {
+        // som da explosao
+        auto audioExplosion = CocosDenshion::SimpleAudioEngine::getInstance();
+        audioExplosion->playEffect("res/sounds/explosion.mp3", false, 1.0f, 1.0f, 1.0f);
+        
+
+        auto particle = ParticleSmoke::createWithTotalParticles(300);
+        particle->setDuration(0.5f);
+        particle->setPosition(Vec2(_cannon_gun2->getPosition()));
+        this->addChild(particle);
+        particle->setAutoRemoveOnFinish(true);
+    }
     
     return true;
+}
+
+bool HelloWorld::canExplodeTarget()
+{
+    _countHitTarget2++;
+    cocos2d::log("Alvo atingido %d vezes.", _countHitTarget2);
+    if (_countHitTarget2 == 10) {
+        // autorizacao para explodir o alvo
+        cocos2d::log("Alvo atingido 10 vezes!");
+        return true;
+    }
+    return false;
 }
 
 void HelloWorld::menuCloseCallback(Ref* pSender)
