@@ -71,14 +71,27 @@ bool HelloWorld::init()
     // add a label shows "Hello World"
     // create and initialize a label
     
-    auto label = Label::createWithTTF("Bang Cities - Rio de Janeiro", "fonts/Marker Felt.ttf", 48);
+    auto label = Label::createWithTTF("Bang Cities", "fonts/Marker Felt.ttf", 48);
     
     // position the label on the center of the screen
     label->setPosition(Vec2(origin.x + visibleSize.width/2,
                             origin.y + visibleSize.height - label->getContentSize().height));
+    
+    cocos2d::log("x: %f", (origin.x + visibleSize.width/2));
+    cocos2d::log("y: %f", (origin.y + visibleSize.height - label->getContentSize().height));
 
     // add the label as a child to this layer
     this->addChild(label, 1);
+    
+    // label com a porcentagem (vida) do tanque 2
+    _labelLifeCannon2 = Label::createWithTTF("100%", "fonts/Marker Felt.ttf", 48);
+    
+    _labelLifeCannon2->setPosition(Vec2(visibleSize.width - 100,
+                                       origin.y + visibleSize.height - _labelLifeCannon2->getContentSize().height));
+    this->addChild(_labelLifeCannon2);
+    
+    cocos2d::log("x2: %f", (origin.x + visibleSize.width/6));
+    cocos2d::log("y2: %f", (origin.y + visibleSize.height - _labelLifeCannon2->getContentSize().height));
     
     // Adicionando terreno
     _ground = Sprite::create("res/game_scene_01_floor.png");
@@ -208,16 +221,19 @@ bool HelloWorld::onContactBegan(PhysicsContact &contact)
         audioExplosion->playEffect("res/sounds/explosion.mp3", false, 1.0f, 1.0f, 1.0f);
         
         // explode
-        auto particle = ParticleFire::createWithTotalParticles(300);
-        particle->setDuration(0.5f);
+        auto particle = ParticleFire::createWithTotalParticles(400);
+        particle->setDuration(1.0f);
         particle->setPosition(Vec2(_cannon_gun2->getPosition()));
         this->addChild(particle);
         particle->setAutoRemoveOnFinish(true);
         
         // remove a arma do canhão 2
         this->removeChild(_cannon_gun2);
+        this->removeChild(_cannon2);
         
         // faz alguma coisa pra mostrar que o jogo acabou...
+        
+        
         
     } else {
         // som da explosao
@@ -238,6 +254,17 @@ bool HelloWorld::onContactBegan(PhysicsContact &contact)
 bool HelloWorld::canExplodeTarget()
 {
     _countHitTarget2++;
+    
+    int percentage = (100 - (_countHitTarget2 * 10));
+    _labelLifeCannon2->setString(std::to_string(percentage) + "%");
+    
+    if (percentage <= 70 && percentage >= 50 ) {
+        _labelLifeCannon2->setColor(cocos2d::Color3B::YELLOW);
+    }
+    else if (percentage < 50) {
+        _labelLifeCannon2->setColor(cocos2d::Color3B::RED);
+    }
+    
     cocos2d::log("Alvo atingido %d vezes.", _countHitTarget2);
     if (_countHitTarget2 == 10) {
         // autorizacao para explodir o alvo

@@ -26,6 +26,9 @@ public:
     CREATE_FUNC(HelloWorld);
 
 private:
+    // label com porcentabem de vida
+    cocos2d::Label* _labelLifeCannon2;
+    
     // terreno
     cocos2d::Sprite* _ground;
     
