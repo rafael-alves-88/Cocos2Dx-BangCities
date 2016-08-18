@@ -18,6 +18,8 @@ public:
     virtual void onTouchMoved(cocos2d::Touch*, cocos2d::Event*);
     virtual void onTouchCancelled(cocos2d::Touch*, cocos2d::Event*);
     
+    void restartScence(cocos2d::Ref* pSender);
+    
     bool onContactBegan(cocos2d::PhysicsContact &contact);
     
     bool canExplodeTarget();

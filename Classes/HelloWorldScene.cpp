@@ -73,9 +73,9 @@ bool HelloWorld::init()
     _labelWin->setColor(Color3B::BLACK);
     _labelWin->setPosition(Vec2(origin.x + visibleSize.width/2,
                                 origin.y + visibleSize.height/2));
-    
+
     this->addChild(_labelWin);
-    
+
     // Adicionando terreno
     _ground = Sprite::create("res/game_scene_01_floor.png");
     _ground->setAnchorPoint(Vec2(0,0));
@@ -93,8 +93,6 @@ bool HelloWorld::init()
     
     closeItem2->setPosition(Vec2(visibleSize.width - 100,
                                  origin.y + visibleSize.height - _labelLifeCannon2->getContentSize().height));
-    
-    //this->addChild(closeItem2);
 
     // create menu, it's an autorelease object
     auto menu = Menu::create(closeItem2, NULL);
@@ -236,6 +234,20 @@ bool HelloWorld::onContactBegan(PhysicsContact &contact)
         // faz alguma coisa pra mostrar que o jogo acabou...
         _labelWin->setString("Parabens Capitao! Missao Cumprida!");
         
+        
+        /* Menu item pra reiniciar o jogo
+        auto labelRestart = Label::createWithTTF("Jogar novamente?", "fonts/Marker Felt.ttf", 48);
+        labelRestart->setColor(Color3B::WHITE);
+        
+        auto restartGame = MenuItemLabel::create(labelRestart, CC_CALLBACK_1(HelloWorld::restartScence, this));
+        
+        restartGame->setPosition(Vec2(origin.x + this->visibleSize.width/2, this->origin.y + this->visibleSize.height/2));
+        
+        auto menuRestart = Menu::create(restartGame, NULL);
+        menuRestart->setPosition(Vec2::ZERO);
+        this->addChild(menuRestart);
+        */
+        
         // toca musica da vitoria
         // baixada de https://www.freesound.org/people/LittleRobotSoundFactory/sounds/321044/
         auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
@@ -297,4 +309,11 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
     //_eventDispatcher->dispatchEvent(&customEndEvent);
     
     
+}
+
+void HelloWorld::restartScence(Ref* pSender)
+{
+    cocos2d::log("restart game");
+    auto newScene = HelloWorld::createScene();
+    Director::getInstance()->replaceScene(newScene);
 }
