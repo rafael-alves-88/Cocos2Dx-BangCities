@@ -76,26 +76,23 @@ bool HelloWorld::init()
     
     this->addChild(_labelWin);
     
-    // label com a porcentagem (vida) do tanque 2
-    _labelLifeCannon2 = Label::createWithTTF("100%", "fonts/Marker Felt.ttf", 48);
-    
-    _labelLifeCannon2->setPosition(Vec2(visibleSize.width - 100,
-                                       origin.y + visibleSize.height - _labelLifeCannon2->getContentSize().height));
-    this->addChild(_labelLifeCannon2);
-    
-    cocos2d::log("x2: %f", (origin.x + visibleSize.width/6));
-    cocos2d::log("y2: %f", (origin.y + visibleSize.height - _labelLifeCannon2->getContentSize().height));
-    
     // Adicionando terreno
     _ground = Sprite::create("res/game_scene_01_floor.png");
     _ground->setAnchorPoint(Vec2(0,0));
     _ground->setPosition(Vec2(0,0));
     this->addChild(_ground, 0);
-                            
+
+    // label com a porcentagem (vida) do tanque 2
+    _labelLifeCannon2 = Label::createWithTTF("100%", "fonts/Marker Felt.ttf", 48);
+    
+    _labelLifeCannon2->setPosition(Vec2(visibleSize.width - 100, _ground->getContentSize().height/2));
+    this->addChild(_labelLifeCannon2);
+    
     // label de sair
     auto closeItem2 = MenuItemLabel::create(labelExit, CC_CALLBACK_1(HelloWorld::menuCloseCallback, this));
     
-    closeItem2->setPosition(Vec2(visibleSize.width - 100, _ground->getContentSize().height/2));
+    closeItem2->setPosition(Vec2(visibleSize.width - 100,
+                                 origin.y + visibleSize.height - _labelLifeCannon2->getContentSize().height));
     
     //this->addChild(closeItem2);
 
