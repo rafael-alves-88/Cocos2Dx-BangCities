@@ -51,19 +51,7 @@ bool HelloWorld::init()
     // 2. add a menu item with "X" image, which is clicked to quit the program
     //    you may modify it.
 
-    // add a "close" icon to exit the progress. it's an autorelease object
-    auto closeItem = MenuItemImage::create(
-                                           "CloseNormal.png",
-                                           "CloseSelected.png",
-                                           CC_CALLBACK_1(HelloWorld::menuCloseCallback, this));
-    
-    closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
-                                origin.y + closeItem->getContentSize().height/2));
-
-    // create menu, it's an autorelease object
-    auto menu = Menu::create(closeItem, NULL);
-    menu->setPosition(Vec2::ZERO);
-    this->addChild(menu, 1);
+    auto labelExit = Label::createWithTTF("Sair", "fonts/Marker Felt.ttf", 48);
 
     /////////////////////////////
     // 3. add your codes below...
@@ -77,9 +65,6 @@ bool HelloWorld::init()
     label->setPosition(Vec2(origin.x + visibleSize.width/2,
                             origin.y + visibleSize.height - label->getContentSize().height));
     
-    cocos2d::log("x: %f", (origin.x + visibleSize.width/2));
-    cocos2d::log("y: %f", (origin.y + visibleSize.height - label->getContentSize().height));
-
     // add the label as a child to this layer
     this->addChild(label, 1);
     
@@ -106,7 +91,19 @@ bool HelloWorld::init()
     _ground->setAnchorPoint(Vec2(0,0));
     _ground->setPosition(Vec2(0,0));
     this->addChild(_ground, 0);
+                            
+    // label de sair
+    auto closeItem2 = MenuItemLabel::create(labelExit, CC_CALLBACK_1(HelloWorld::menuCloseCallback, this));
     
+    closeItem2->setPosition(Vec2(visibleSize.width - 100, _ground->getContentSize().height/2));
+    
+    //this->addChild(closeItem2);
+
+    // create menu, it's an autorelease object
+    auto menu = Menu::create(closeItem2, NULL);
+    menu->setPosition(Vec2::ZERO);
+    this->addChild(menu, 1);
+                            
     // Adicionando arma do canhao (Player 1)
     _cannon_gun = Sprite::create("res/cannon_gun.png");
     _cannon_gun->setPosition(Vec2(150 + origin.x, _ground->getBoundingBox().size.height + 80));
