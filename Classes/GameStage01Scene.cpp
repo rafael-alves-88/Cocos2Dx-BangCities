@@ -1,4 +1,4 @@
-#include "HelloWorldScene.h"
+#include "GameStage01Scene.h"
 #include "SimpleAudioEngine.h"
 #include "Resources.h"
 #include "MenuScene.h"
@@ -20,15 +20,15 @@ boolean isPaused;
 Size size;
 Vec2 origin;
 
-HelloWorld* HelloWorld::instance = NULL;
-HudLayer* HelloWorld::hudLayer = NULL;
-PauseLayer* HelloWorld::pauseLayer = NULL;
+GameStage01* GameStage01::instance = NULL;
+HudLayer* GameStage01::hudLayer = NULL;
+PauseLayer* GameStage01::pauseLayer = NULL;
 
-Scene* HelloWorld::createScene()
+Scene* GameStage01::createScene()
 {
     auto scene = Scene::createWithPhysics();
     scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
-    auto layer = HelloWorld::create();
+    auto layer = GameStage01::create();
 
     scene->addChild(layer);
 
@@ -45,10 +45,10 @@ Scene* HelloWorld::createScene()
     return scene;
 }
 
-HelloWorld* HelloWorld::getInstance()
+GameStage01* GameStage01::getInstance()
 {
 	if (instance == NULL)
-		instance = new HelloWorld();
+		instance = new GameStage01();
 
 	return instance;
 }
@@ -60,7 +60,7 @@ enum class PhysicsCategory {
     All = PhysicsCategory::Cannon | PhysicsCategory::Projectile // 3
 };
 
-bool HelloWorld::init()
+bool GameStage01::init()
 {
     if ( !LayerColor::initWithColor(Color4B(Color4B::ORANGE)))
     {
@@ -77,7 +77,7 @@ bool HelloWorld::init()
     return true;
 }
 
-void HelloWorld::initVariables()
+void GameStage01::initVariables()
 {
 	origin = Director::getInstance()->getVisibleOrigin();
 	isCooldown = false;
@@ -88,7 +88,7 @@ void HelloWorld::initVariables()
 	size = Director::getInstance()->getWinSize();
 }
 
-void HelloWorld::initBackground()
+void GameStage01::initBackground()
 {
 	// criando sprite de fundo
 	auto background = Sprite::create(backgroundGameScene01);
@@ -103,13 +103,13 @@ void HelloWorld::initBackground()
 	this->addChild(_ground, 0);
 }
 
-void HelloWorld::initSound()
+void GameStage01::initSound()
 {
 	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
 	audio->playBackgroundMusic(gameScene_01_01MusicFile, true);
 }
 
-void HelloWorld::initLabels()
+void GameStage01::initLabels()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 
@@ -133,7 +133,7 @@ void HelloWorld::initLabels()
 	this->addChild(_labelLifeCannon2);
 }
 
-void HelloWorld::initPlayers()
+void GameStage01::initPlayers()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 
@@ -173,24 +173,24 @@ void HelloWorld::initPlayers()
 	this->addChild(_cannon2, 0);
 }
 
-void HelloWorld::initTouchEvent()
+void GameStage01::initTouchEvent()
 {
 	// Para travar o evento de touch
 	auto touchListener = EventListenerTouchOneByOne::create();
 
-	touchListener->onTouchBegan = CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
-	touchListener->onTouchEnded = CC_CALLBACK_2(HelloWorld::onTouchEnded, this);
-	touchListener->onTouchMoved = CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
-	touchListener->onTouchCancelled = CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
+	touchListener->onTouchBegan = CC_CALLBACK_2(GameStage01::onTouchBegan, this);
+	touchListener->onTouchEnded = CC_CALLBACK_2(GameStage01::onTouchEnded, this);
+	touchListener->onTouchMoved = CC_CALLBACK_2(GameStage01::onTouchBegan, this);
+	touchListener->onTouchCancelled = CC_CALLBACK_2(GameStage01::onTouchBegan, this);
 
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
 
 	auto contactListener = EventListenerPhysicsContact::create();
-	contactListener->onContactBegin = CC_CALLBACK_1(HelloWorld::onContactBegan, this);
+	contactListener->onContactBegin = CC_CALLBACK_1(GameStage01::onContactBegan, this);
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
 }
 
-bool HelloWorld::onTouchBegan(Touch* touch, Event* event)
+bool GameStage01::onTouchBegan(Touch* touch, Event* event)
 {
     cocos2d::log("touch began");
     
@@ -233,7 +233,7 @@ bool HelloWorld::onTouchBegan(Touch* touch, Event* event)
 		audio->playEffect(cannonShotFxFile, false, 1.0f, 1.0f, 1.0f);
 
 		// criando callback, cooldown para próximo tiro
-		auto loading = CallFunc::create(CC_CALLBACK_0(HelloWorld::updateCooldown, this));
+		auto loading = CallFunc::create(CC_CALLBACK_0(GameStage01::updateCooldown, this));
 		auto delay = DelayTime::create(cooldownTime);
 		auto sequence = Sequence::create(delay, loading, NULL);
 
@@ -243,22 +243,22 @@ bool HelloWorld::onTouchBegan(Touch* touch, Event* event)
     return true;
 }
 
-void HelloWorld::onTouchEnded(Touch* touch, Event* event)
+void GameStage01::onTouchEnded(Touch* touch, Event* event)
 {
     cocos2d::log("touch ended");
 }
 
-void HelloWorld::onTouchMoved(Touch* touch, Event* event)
+void GameStage01::onTouchMoved(Touch* touch, Event* event)
 {
     cocos2d::log("touch moved");
 }
 
-void HelloWorld::onTouchCancelled(Touch* touch, Event* event)
+void GameStage01::onTouchCancelled(Touch* touch, Event* event)
 {
     cocos2d::log("touch cancelled");
 }
 
-bool HelloWorld::onContactBegan(PhysicsContact &contact)
+bool GameStage01::onContactBegan(PhysicsContact &contact)
 {
     cocos2d::log("on contact began");
 
@@ -285,7 +285,7 @@ bool HelloWorld::onContactBegan(PhysicsContact &contact)
         auto labelRestart = Label::createWithTTF("Jogar novamente?", "fonts/Marker Felt.ttf", 48);
         labelRestart->setColor(Color3B::WHITE);
         
-        auto restartGame = MenuItemLabel::create(labelRestart, CC_CALLBACK_1(HelloWorld::restartScence, this));
+        auto restartGame = MenuItemLabel::create(labelRestart, CC_CALLBACK_1(GameStage01::restartScence, this));
         
         restartGame->setPosition(Vec2(origin.x + this->visibleSize.width/2, this->origin.y + this->visibleSize.height/2));
         
@@ -297,7 +297,7 @@ bool HelloWorld::onContactBegan(PhysicsContact &contact)
 		CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic(stageClearMusicFile, false);
         
 		// criando callback, delay de 7 segundos e sequência
-		auto loading = CallFunc::create(CC_CALLBACK_0(HelloWorld::updateScene, this));
+		auto loading = CallFunc::create(CC_CALLBACK_0(GameStage01::updateScene, this));
 		auto delay = DelayTime::create(7.0f);
 		auto sequence = Sequence::create(delay, loading, NULL);
 
@@ -318,17 +318,17 @@ bool HelloWorld::onContactBegan(PhysicsContact &contact)
     return true;
 }
 
-void HelloWorld::updateScene()
+void GameStage01::updateScene()
 {
 	Director::getInstance()->replaceScene(StageSelectionScene::createScene());
 }
 
-void HelloWorld::updateCooldown()
+void GameStage01::updateCooldown()
 {
 	isCooldown = false;
 }
 
-void HelloWorld::pauseGame()
+void GameStage01::pauseGame()
 {
 	isPaused = !(isPaused);
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
@@ -345,7 +345,7 @@ void HelloWorld::pauseGame()
 }
 
 // função para sair da cena
-void HelloWorld::quitGame()
+void GameStage01::quitGame()
 {
 	pauseLayer->setVisible(false);
 	Director::getInstance()->resume();
@@ -355,7 +355,7 @@ void HelloWorld::quitGame()
 	Director::getInstance()->replaceScene(MenuScene::createScene());
 }
 
-bool HelloWorld::canExplodeTarget()
+bool GameStage01::canExplodeTarget()
 {
     _countHitTarget2++;
     
@@ -378,9 +378,9 @@ bool HelloWorld::canExplodeTarget()
     return false;
 }
 
-void HelloWorld::restartScence(Ref* pSender)
+void GameStage01::restartScence(Ref* pSender)
 {
     cocos2d::log("restart game");
-    auto newScene = HelloWorld::createScene();
+    auto newScene = GameStage01::createScene();
     Director::getInstance()->replaceScene(newScene);
 }

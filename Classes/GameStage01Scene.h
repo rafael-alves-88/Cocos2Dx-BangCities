@@ -1,17 +1,17 @@
-#ifndef __HELLOWORLD_SCENE_H__
-#define __HELLOWORLD_SCENE_H__
+#ifndef __GAMESTAGE01_SCENE_H__
+#define __GAMESTAGE01_SCENE_H__
 
 #include "cocos2d.h"
 #include "PauseLayer.h"
 #include "HudLayer.h"
 
-class HelloWorld : public cocos2d::LayerColor
+class GameStage01 : public cocos2d::LayerColor
 {
 public:
     static cocos2d::Scene* createScene();
 
-	static HelloWorld* instance;
-	static HelloWorld* getInstance();
+	static GameStage01* instance;
+	static GameStage01* getInstance();
     virtual bool init();
     
     // a selector callback
@@ -33,7 +33,7 @@ public:
 	static PauseLayer* pauseLayer;
 
     // implement the "static create()" method manually
-    CREATE_FUNC(HelloWorld);
+    CREATE_FUNC(GameStage01);
 
 	void initVariables();
 	void initBackground();
@@ -66,4 +66,4 @@ private:
     int _countHitTarget1;
 };
 
-#endif // __HELLOWORLD_SCENE_H__
+#endif // __GAMESTAGE01_SCENE_H__
