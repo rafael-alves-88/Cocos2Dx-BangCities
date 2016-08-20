@@ -35,6 +35,12 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
 
+	void initVariables();
+	void initBackground();
+	void initSound();
+	void initLabels();
+	void initPlayers();
+	void initTouchEvent();
 	void pauseGame();
 	void quitGame();
 	void updateScene();

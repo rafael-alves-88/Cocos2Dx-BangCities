@@ -16,6 +16,10 @@ float cooldownTime = 1.5f;
 // pause
 boolean isPaused;
 
+// size
+Size size;
+Vec2 origin;
+
 HelloWorld* HelloWorld::instance = NULL;
 HudLayer* HelloWorld::hudLayer = NULL;
 PauseLayer* HelloWorld::pauseLayer = NULL;
@@ -56,122 +60,136 @@ enum class PhysicsCategory {
     All = PhysicsCategory::Cannon | PhysicsCategory::Projectile // 3
 };
 
-// on "init" you need to initialize your instance
 bool HelloWorld::init()
 {
-    //////////////////////////////
-    // 1. super init first
     if ( !LayerColor::initWithColor(Color4B(Color4B::ORANGE)))
     {
         return false;
     }
     
-	isCooldown = false;
-	isPaused = false;
-    _countHitTarget1 = 0;
-	instance = this;
-    
-	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
-	audio->playBackgroundMusic(gameScene_01_01MusicFile, true);
-
-    auto visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
-
-    /////////////////////////////
-    // 2. add a menu item with "X" image, which is clicked to quit the program
-    //    you may modify it.
-
-    /////////////////////////////
-    // 3. add your codes below...
-
-    // add a label shows "Hello World"
-    // create and initialize a label
-    
-    auto label = Label::createWithTTF("Bang Cities", font_markerfelt, 48);
-
-    // position the label on the center of the screen
-    label->setPosition(Vec2(origin.x + visibleSize.width/2,
-                            origin.y + visibleSize.height - label->getContentSize().height));
-    
-    // add the label as a child to this layer
-    this->addChild(label, 1);
-    
-    // label pra mostrar msg de vitoria
-    _labelWin = Label::createWithTTF("", font_markerfelt, 60);
-    _labelWin->setColor(Color3B::BLACK);
-    _labelWin->setPosition(Vec2(origin.x + visibleSize.width/2,
-                                origin.y + visibleSize.height/2));
-
-    this->addChild(_labelWin);
-
-    // Adicionando terreno
-    _ground = Sprite::create(game_scene_01_floor);
-    _ground->setAnchorPoint(Vec2(0,0));
-    _ground->setPosition(Vec2(0,0));
-    this->addChild(_ground, 0);
-
-    // label com a porcentagem (vida) do tanque 2
-    _labelLifeCannon2 = Label::createWithTTF("100%", font_markerfelt, 48);
-    
-    _labelLifeCannon2->setPosition(Vec2(visibleSize.width - 100, _ground->getContentSize().height/2));
-    this->addChild(_labelLifeCannon2);
-
-    // Adicionando arma do canhao (Player 1)
-    _cannon_gun = Sprite::create(cannon_gun_player);
-    _cannon_gun->setPosition(Vec2(150 + origin.x, _ground->getBoundingBox().size.height + 80));
-    this->addChild(_cannon_gun, 0);
-    
-    // Adicionando canhao (Player 1)
-    _cannon = Sprite::create(cannon_player);
-    _cannon->setPosition(Vec2(100 + origin.x, _ground->getBoundingBox().size.height + 35));
-    this->addChild(_cannon, 0);
-    
-    // Adicionando arma do canhao (Player 2 - Maquina)
-    _cannon_gun2 = Sprite::create(cannon_gun_player);
-    _cannon_gun2->setPosition(Vec2(visibleSize.width - 150, _ground->getBoundingBox().size.height + 80));
-    _cannon_gun2->setFlippedX(true);
-    this->addChild(_cannon_gun2, 0);
-
-    // Adicionando canhao (Player 2 - Maquina)
-    _cannon2 = Sprite::create(cannon_player);
-    _cannon2->setPosition(Vec2(visibleSize.width - 100, _ground->getBoundingBox().size.height + 35));
-    _cannon2->setFlippedX(true);
-    
-    // Sobre a colisao
-    auto cannonSize = _cannon_gun2->getContentSize();
-    auto physicsBody = PhysicsBody::createBox(Size(cannonSize.width, cannonSize.height),
-                                              PhysicsMaterial(0.1f, 1.0f, 0.0f));
-    
-    physicsBody->setDynamic(true);
-    physicsBody->setCategoryBitmask((int)PhysicsCategory::Cannon);
-    physicsBody->setCollisionBitmask((int)PhysicsCategory::None);
-    physicsBody->setContactTestBitmask((int)PhysicsCategory::Projectile);
-    
-    _cannon_gun2->setPhysicsBody(physicsBody);
-    
-    this->addChild(_cannon2, 0);
-    
-    // Para travar o evento de touch
-    auto touchListener = EventListenerTouchOneByOne::create();
-
-    touchListener->onTouchBegan = CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
-    touchListener->onTouchEnded = CC_CALLBACK_2(HelloWorld::onTouchEnded, this);
-    touchListener->onTouchMoved = CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
-    touchListener->onTouchCancelled = CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
-    
-    _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
-    
-    // Sobre a colisao: Finally, you need to register to receive contact notifications...
-    // https://www.raywenderlich.com/95835/cocos2d-x-tutorial-beginners
-    auto contactListener = EventListenerPhysicsContact::create();
-    contactListener->onContactBegin = CC_CALLBACK_1(HelloWorld::onContactBegan, this);
-    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
+	initVariables();
+	initBackground();
+	initSound();
+	initLabels();
+	initPlayers();
+	initTouchEvent();
     
     return true;
 }
 
-// seguindo https://www.raywenderlich.com/95835/cocos2d-x-tutorial-beginners
-// no trecho: Then implement your callback in HelloWorldScene.cpp:
+void HelloWorld::initVariables()
+{
+	origin = Director::getInstance()->getVisibleOrigin();
+	isCooldown = false;
+	isPaused = false;
+	_countHitTarget1 = 0;
+	instance = this;
+
+	size = Director::getInstance()->getWinSize();
+}
+
+void HelloWorld::initBackground()
+{
+	// criando sprite de fundo
+	auto background = Sprite::create(backgroundGameScene01);
+	background->setPosition(Vec2(size.width / 2, size.height / 2));
+	background->setOpacity(150);
+	this->addChild(background);
+
+	// adicionando terreno
+	_ground = Sprite::create(game_scene_01_floor);
+	_ground->setAnchorPoint(Vec2(0, 0));
+	_ground->setPosition(Vec2(0, 0));
+	this->addChild(_ground, 0);
+}
+
+void HelloWorld::initSound()
+{
+	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+	audio->playBackgroundMusic(gameScene_01_01MusicFile, true);
+}
+
+void HelloWorld::initLabels()
+{
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+
+	auto label = Label::createWithTTF("Bang Cities", font_markerfelt, 48);
+	label->setPosition(Vec2(origin.x + visibleSize.width / 2,
+		origin.y + visibleSize.height - label->getContentSize().height));
+	this->addChild(label, 1);
+
+	// label pra mostrar msg de vitória
+	_labelWin = Label::createWithTTF("", font_markerfelt, 60);
+	_labelWin->setColor(Color3B::BLACK);
+	_labelWin->setPosition(Vec2(origin.x + visibleSize.width / 2,
+		origin.y + visibleSize.height / 2));
+
+	this->addChild(_labelWin);
+
+	// label com a porcentagem (vida) do tanque 2
+	_labelLifeCannon2 = Label::createWithTTF("100%", font_markerfelt, 48);
+
+	_labelLifeCannon2->setPosition(Vec2(visibleSize.width - 100, _ground->getContentSize().height / 2));
+	this->addChild(_labelLifeCannon2);
+}
+
+void HelloWorld::initPlayers()
+{
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+
+	// Adicionando arma do canhao (Player 1)
+	_cannon_gun = Sprite::create(cannon_gun_player);
+	_cannon_gun->setPosition(Vec2(150 + origin.x, _ground->getBoundingBox().size.height + 80));
+	this->addChild(_cannon_gun, 0);
+
+	// Adicionando canhao (Player 1)
+	_cannon = Sprite::create(cannon_player);
+	_cannon->setPosition(Vec2(100 + origin.x, _ground->getBoundingBox().size.height + 35));
+	this->addChild(_cannon, 0);
+
+	// Adicionando arma do canhao (Player 2 - Maquina)
+	_cannon_gun2 = Sprite::create(cannon_gun_player);
+	_cannon_gun2->setPosition(Vec2(visibleSize.width - 150, _ground->getBoundingBox().size.height + 80));
+	_cannon_gun2->setFlippedX(true);
+	this->addChild(_cannon_gun2, 0);
+
+	// Adicionando canhao (Player 2 - Maquina)
+	_cannon2 = Sprite::create(cannon_player);
+	_cannon2->setPosition(Vec2(visibleSize.width - 100, _ground->getBoundingBox().size.height + 35));
+	_cannon2->setFlippedX(true);
+
+	// Sobre a colisao
+	auto cannonSize = _cannon_gun2->getContentSize();
+	auto physicsBody = PhysicsBody::createBox(Size(cannonSize.width, cannonSize.height),
+		PhysicsMaterial(0.1f, 1.0f, 0.0f));
+
+	physicsBody->setDynamic(true);
+	physicsBody->setCategoryBitmask((int)PhysicsCategory::Cannon);
+	physicsBody->setCollisionBitmask((int)PhysicsCategory::None);
+	physicsBody->setContactTestBitmask((int)PhysicsCategory::Projectile);
+
+	_cannon_gun2->setPhysicsBody(physicsBody);
+
+	this->addChild(_cannon2, 0);
+}
+
+void HelloWorld::initTouchEvent()
+{
+	// Para travar o evento de touch
+	auto touchListener = EventListenerTouchOneByOne::create();
+
+	touchListener->onTouchBegan = CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
+	touchListener->onTouchEnded = CC_CALLBACK_2(HelloWorld::onTouchEnded, this);
+	touchListener->onTouchMoved = CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
+	touchListener->onTouchCancelled = CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
+
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+
+	auto contactListener = EventListenerPhysicsContact::create();
+	contactListener->onContactBegin = CC_CALLBACK_1(HelloWorld::onContactBegan, this);
+	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
+}
+
 bool HelloWorld::onTouchBegan(Touch* touch, Event* event)
 {
     cocos2d::log("touch began");
