@@ -1,6 +1,6 @@
 #include "PauseLayer.h"
 #include "Resources.h"
-#include "HelloWorldScene.h"
+#include "GameStage01Scene.h"
 
 bool PauseLayer::init()
 {
@@ -41,10 +41,10 @@ bool PauseLayer::init()
 
 void PauseLayer::resumeGameCallback(Ref* sender)
 {
-	HelloWorld::getInstance()->pauseGame();
+	GameStage01::getInstance()->pauseGame();
 }
 
 void PauseLayer::quitGameCallback(Ref* sender)
 {
-	HelloWorld::getInstance()->quitGame();
+	GameStage01::getInstance()->quitGame();
 }

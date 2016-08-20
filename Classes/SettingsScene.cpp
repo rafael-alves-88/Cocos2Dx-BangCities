@@ -2,6 +2,8 @@
 #include "MenuScene.h"
 #include "Resources.h"
 #include "SimpleAudioEngine.h"
+#include "Constants.h"
+
 using namespace CocosDenshion;
 
 Scene* SettingsScene::createScene()
@@ -44,6 +46,13 @@ bool SettingsScene::init()
 	auto musicOnItem = MenuItemImage::create(uiMusicNormal, uiMusicPressed);
 	auto musicOffItem = MenuItemImage::create(uiMusicDisabled, uiMusicDisabled);
 
+	bool hasSound = UserDefault::getInstance()->getBoolForKey(SOUND_SETTINGS, true);
+	if (!hasSound) {
+		auto musicAux = musicOnItem;
+		musicOnItem = musicOffItem;
+		musicOffItem = musicAux;
+	}
+
 	auto musicToggle = MenuItemToggle::createWithCallback(
 		CC_CALLBACK_1(SettingsScene::musicCallback, this),
 		musicOnItem,
@@ -54,6 +63,13 @@ bool SettingsScene::init()
 	// items de sound effects e toggle
 	auto sfxOnItem = MenuItemImage::create(uiSoundFxNormal, uiSoundFxPressed);
 	auto sfxOffItem = MenuItemImage::create(uiSoundFxDisabled, uiSoundFxDisabled);
+
+	bool hasSfx = UserDefault::getInstance()->getBoolForKey(SFX_SETTINGS, true);
+	if (!hasSfx) {
+		auto sfxAux = sfxOnItem;
+		sfxOnItem = sfxOffItem;
+		sfxOffItem = sfxAux;
+	}
 
 	auto sfxToggle = MenuItemToggle::createWithCallback(
 		CC_CALLBACK_1(SettingsScene::sfxCallback, this),
@@ -91,17 +107,31 @@ bool SettingsScene::init()
 
 void SettingsScene::musicCallback(Ref* sender)
 {
-	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	bool hasSfx = UserDefault::getInstance()->getBoolForKey(SFX_SETTINGS, true);
+	if (hasSfx) {
+		SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	}
+
+	bool hasSound = UserDefault::getInstance()->getBoolForKey(SOUND_SETTINGS, true);
+	UserDefault::getInstance()->setBoolForKey(SOUND_SETTINGS, !hasSound);
 }
 
 void SettingsScene::sfxCallback(Ref* sender)
 {
-	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	bool hasSfx = UserDefault::getInstance()->getBoolForKey(SFX_SETTINGS, true);
+	if (hasSfx) {
+		SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	}
+
+	UserDefault::getInstance()->setBoolForKey(SFX_SETTINGS, !hasSfx);
 }
 
 void SettingsScene::backCallback(Ref* sender)
 {
 	// retorna para MenuScene
-	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	bool hasSfx = UserDefault::getInstance()->getBoolForKey(SFX_SETTINGS, true);
+	if (hasSfx) {
+		SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	}
 	Director::getInstance()->replaceScene(MenuScene::createScene());
 }

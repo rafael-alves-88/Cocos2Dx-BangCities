@@ -3,6 +3,7 @@
 #include "Resources.h"
 #include "MenuScene.h"
 #include "StageSelectionScene.h"
+#include "Constants.h"
 
 USING_NS_CC;
 
@@ -105,8 +106,14 @@ void GameStage01::initBackground()
 
 void GameStage01::initSound()
 {
-	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
-	audio->playBackgroundMusic(gameScene_01_01MusicFile, true);
+	bool hasSound = UserDefault::getInstance()->getBoolForKey(SOUND_SETTINGS, true);
+
+	if (hasSound) {
+		CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic(gameScene_01_01MusicFile, true);
+	}
+	else {
+		CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic();
+	}
 }
 
 void GameStage01::initLabels()
@@ -229,8 +236,11 @@ bool GameStage01::onTouchBegan(Touch* touch, Event* event)
 		bullet->runAction(Sequence::create(actionMove, actionRemove, nullptr));
 
 		// som do canhao
-		auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
-		audio->playEffect(cannonShotFxFile, false, 1.0f, 1.0f, 1.0f);
+		bool hasSfx = UserDefault::getInstance()->getBoolForKey(SFX_SETTINGS, true);
+		if (hasSfx) {
+			auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+			audio->playEffect(cannonShotFxFile, false, 1.0f, 1.0f, 1.0f);
+		}
 
 		// criando callback, cooldown para próximo tiro
 		auto loading = CallFunc::create(CC_CALLBACK_0(GameStage01::updateCooldown, this));
@@ -264,8 +274,11 @@ bool GameStage01::onContactBegan(PhysicsContact &contact)
 
     if (canExplodeTarget()) {
         // som da explosao
-        auto audioExplosion = CocosDenshion::SimpleAudioEngine::getInstance();
-        audioExplosion->playEffect(explosionFxFile, false, 1.0f, 1.0f, 1.0f);
+		bool hasSfx = UserDefault::getInstance()->getBoolForKey(SFX_SETTINGS, true);
+		if (hasSfx) {
+			auto audioExplosion = CocosDenshion::SimpleAudioEngine::getInstance();
+			audioExplosion->playEffect(explosionFxFile, false, 1.0f, 1.0f, 1.0f);
+		}
         
         // explode
         auto particle = ParticleFire::createWithTotalParticles(400);
@@ -294,7 +307,14 @@ bool GameStage01::onContactBegan(PhysicsContact &contact)
         this->addChild(menuRestart);
         */
        
-		CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic(stageClearMusicFile, false);
+		bool hasSound = UserDefault::getInstance()->getBoolForKey(SOUND_SETTINGS, true);
+
+		if (hasSound) {
+			CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic(stageClearMusicFile, true);
+		}
+		else {
+			CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic();
+		}
         
 		// criando callback, delay de 7 segundos e sequência
 		auto loading = CallFunc::create(CC_CALLBACK_0(GameStage01::updateScene, this));
@@ -305,8 +325,11 @@ bool GameStage01::onContactBegan(PhysicsContact &contact)
 		this->runAction(sequence);
     } else {
         // som da explosao
-        auto audioExplosion = CocosDenshion::SimpleAudioEngine::getInstance();
-        audioExplosion->playEffect(explosionFxFile, false, 1.0f, 1.0f, 1.0f);
+		bool hasSfx = UserDefault::getInstance()->getBoolForKey(SFX_SETTINGS, true);
+		if (hasSfx) {
+			auto audioExplosion = CocosDenshion::SimpleAudioEngine::getInstance();
+			audioExplosion->playEffect(explosionFxFile, false, 1.0f, 1.0f, 1.0f);
+		}
         
         auto particle = ParticleSmoke::createWithTotalParticles(300);
         particle->setDuration(0.5f);
@@ -331,7 +354,10 @@ void GameStage01::updateCooldown()
 void GameStage01::pauseGame()
 {
 	isPaused = !(isPaused);
-	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	bool hasSfx = UserDefault::getInstance()->getBoolForKey(SFX_SETTINGS, true);
+	if (hasSfx) {
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	}
 	if (isPaused)
 	{
 		Director::getInstance()->pause();
@@ -350,7 +376,10 @@ void GameStage01::quitGame()
 	pauseLayer->setVisible(false);
 	Director::getInstance()->resume();
 	unscheduleUpdate();
-	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	bool hasSfx = UserDefault::getInstance()->getBoolForKey(SFX_SETTINGS, true);
+	if (hasSfx) {
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	}
 	CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic();
 	Director::getInstance()->replaceScene(MenuScene::createScene());
 }

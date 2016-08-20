@@ -2,6 +2,7 @@
 #include "MenuScene.h"
 #include "Resources.h"
 #include "SimpleAudioEngine.h"
+#include "Constants.h"
 
 using namespace CocosDenshion;
 
@@ -23,7 +24,14 @@ bool GameOverScene::init()
 	Size size = Director::getInstance()->getWinSize();
 
 	// música de game over
-	SimpleAudioEngine::getInstance()->playBackgroundMusic(gameOverMusicFile, false);
+	bool hasSound = UserDefault::getInstance()->getBoolForKey(SOUND_SETTINGS, true);
+
+	if (hasSound) {
+		CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic(gameOverMusicFile, true);
+	}
+	else {
+		CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic();
+	}
 
 	// sprite de splash
 	auto splash = Sprite::create(gameOver);

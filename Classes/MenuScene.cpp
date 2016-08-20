@@ -3,6 +3,8 @@
 #include "StageSelectionScene.h"
 #include "Resources.h"
 #include "SimpleAudioEngine.h"
+#include "Constants.h"
+
 using namespace CocosDenshion;
 
 Scene* MenuScene::createScene()
@@ -23,7 +25,14 @@ bool MenuScene::init()
 	Size size = Director::getInstance()->getWinSize();
 	TTFConfig ttfConfig(font_riffic, 64.0f);
 
-	SimpleAudioEngine::getInstance()->playBackgroundMusic(menuSceneMusicFile, true);
+	bool hasSound = UserDefault::getInstance()->getBoolForKey(SOUND_SETTINGS, true);
+
+	if (hasSound) {
+		SimpleAudioEngine::getInstance()->playBackgroundMusic(menuSceneMusicFile, true);
+	}
+	else {
+		SimpleAudioEngine::getInstance()->stopBackgroundMusic();
+	}
 
 	// background do menu
 	auto backgroundSprite = Sprite::create(backgroundMenuScene);
@@ -64,7 +73,10 @@ bool MenuScene::init()
 // transita para Settings
 void MenuScene::settingsCallback(Ref* sender)
 {
-	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	bool hasSfx = UserDefault::getInstance()->getBoolForKey(SFX_SETTINGS, true);
+	if (hasSfx) {
+		SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	}
 	Director::getInstance()->replaceScene(SettingsScene::createScene());
 }
 
@@ -72,12 +84,9 @@ void MenuScene::settingsCallback(Ref* sender)
 void MenuScene::playCallback(Ref* sender)
 {
 	SimpleAudioEngine::getInstance()->stopBackgroundMusic();
-	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	bool hasSfx = UserDefault::getInstance()->getBoolForKey(SFX_SETTINGS, true);
+	if (hasSfx) {
+		SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	}
 	Director::getInstance()->replaceScene(StageSelectionScene::createScene());
-}
-
-// transita para o ranking
-void MenuScene::rankingCallback(Ref* sender)
-{
-	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
 }

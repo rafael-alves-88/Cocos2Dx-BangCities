@@ -3,8 +3,9 @@
 #include "MenuScene.h"
 #include "Resources.h"
 #include "SimpleAudioEngine.h"
-//#include "GameScene01.h"
-#include "HelloWorldScene.h"
+#include "GameStage01Scene.h"
+#include "Constants.h"
+
 using namespace CocosDenshion;
 
 Scene* StageSelectionScene::createScene()
@@ -25,7 +26,14 @@ bool StageSelectionScene::init()
 	Size size = Director::getInstance()->getWinSize();
 	TTFConfig ttfConfig(font_riffic, 64.0f);
 
-	SimpleAudioEngine::getInstance()->playBackgroundMusic(sceneSelectionMusicFile, true);
+	bool hasSound = UserDefault::getInstance()->getBoolForKey(SOUND_SETTINGS, true);
+
+	if (hasSound) {
+		SimpleAudioEngine::getInstance()->playBackgroundMusic(sceneSelectionMusicFile, true);
+	}
+	else {
+		SimpleAudioEngine::getInstance()->stopBackgroundMusic();
+	}
 
 	// background do menu
 	auto backgroundSprite = Sprite::create(backgroundSceneSelection);
@@ -105,15 +113,21 @@ bool StageSelectionScene::init()
 // transita para a GameScene 1
 void StageSelectionScene::stage1Callback(Ref* sender)
 {
-	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	bool hasSfx = UserDefault::getInstance()->getBoolForKey(SFX_SETTINGS, true);
+	if (hasSfx) {
+		SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	}
 	SimpleAudioEngine::getInstance()->stopBackgroundMusic();
-	Director::getInstance()->replaceScene(HelloWorld::createScene());
+	Director::getInstance()->replaceScene(GameStage01::createScene());
 }
 
 // transita para a GameScene 2
 void StageSelectionScene::stage2Callback(Ref* sender)
 {
-	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	bool hasSfx = UserDefault::getInstance()->getBoolForKey(SFX_SETTINGS, true);
+	if (hasSfx) {
+		SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	}
 	//SimpleAudioEngine::getInstance()->stopBackgroundMusic();
 	//Director::getInstance()->replaceScene(GameScene02::createScene());
 }
@@ -121,7 +135,10 @@ void StageSelectionScene::stage2Callback(Ref* sender)
 // transita para a GameScene 3
 void StageSelectionScene::stage3Callback(Ref* sender)
 {
-	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	bool hasSfx = UserDefault::getInstance()->getBoolForKey(SFX_SETTINGS, true);
+	if (hasSfx) {
+		SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	}
 	//SimpleAudioEngine::getInstance()->stopBackgroundMusic();
 	//Director::getInstance()->replaceScene(GameScene03::createScene());
 }
@@ -129,6 +146,9 @@ void StageSelectionScene::stage3Callback(Ref* sender)
 void StageSelectionScene::backCallback(Ref* sender)
 {
 	// retorna para MenuScene
-	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	bool hasSfx = UserDefault::getInstance()->getBoolForKey(SFX_SETTINGS, true);
+	if (hasSfx) {
+		SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	}
 	Director::getInstance()->replaceScene(MenuScene::createScene());
 }
