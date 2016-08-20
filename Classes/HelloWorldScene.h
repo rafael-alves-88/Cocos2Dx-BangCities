@@ -10,6 +10,8 @@ class HelloWorld : public cocos2d::LayerColor
 public:
     static cocos2d::Scene* createScene();
 
+	static HelloWorld* instance;
+	static HelloWorld* getInstance();
     virtual bool init();
     
     // a selector callback
@@ -33,6 +35,10 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
 
+	void pauseGame();
+	void quitGame();
+	void updateScene();
+	void updateCooldown();
 private:
     // label para msg de vitoria!!
     cocos2d::Label* _labelWin;

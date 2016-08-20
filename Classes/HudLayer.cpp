@@ -1,6 +1,6 @@
 #include "HudLayer.h"
 #include "Resources.h"
-#include "GameScene01.h"
+#include "HelloWorldScene.h"
 
 bool HudLayer::init()
 {
@@ -33,5 +33,5 @@ void HudLayer::initPauseMenu()
 
 void HudLayer::pauseCallback(Ref* sender)
 {
-	GameScene01::getInstance()->pauseGame();
+	HelloWorld::getInstance()->pauseGame();
 }

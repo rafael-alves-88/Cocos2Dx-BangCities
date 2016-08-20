@@ -2,12 +2,21 @@
 #include "SimpleAudioEngine.h"
 #include "Resources.h"
 #include "MenuScene.h"
+#include "StageSelectionScene.h"
 
 USING_NS_CC;
 
 // contagem de acertos no tanque 2
 int _countHitTarget2;
 
+// cooldown do tiro
+boolean isCooldown;
+float cooldownTime = 1.5f;
+
+// pause
+boolean isPaused;
+
+HelloWorld* HelloWorld::instance = NULL;
 HudLayer* HelloWorld::hudLayer = NULL;
 PauseLayer* HelloWorld::pauseLayer = NULL;
 
@@ -32,6 +41,14 @@ Scene* HelloWorld::createScene()
     return scene;
 }
 
+HelloWorld* HelloWorld::getInstance()
+{
+	if (instance == NULL)
+		instance = new HelloWorld();
+
+	return instance;
+}
+
 enum class PhysicsCategory {
     None = 0,
     Cannon = (1 << 0),             // 1
@@ -49,7 +66,10 @@ bool HelloWorld::init()
         return false;
     }
     
+	isCooldown = false;
+	isPaused = false;
     _countHitTarget1 = 0;
+	instance = this;
     
 	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
 	audio->playBackgroundMusic(gameScene_01_01MusicFile, true);
@@ -60,8 +80,6 @@ bool HelloWorld::init()
     /////////////////////////////
     // 2. add a menu item with "X" image, which is clicked to quit the program
     //    you may modify it.
-
-    auto labelExit = Label::createWithTTF("Sair", font_markerfelt, 48);
 
     /////////////////////////////
     // 3. add your codes below...
@@ -97,18 +115,7 @@ bool HelloWorld::init()
     
     _labelLifeCannon2->setPosition(Vec2(visibleSize.width - 100, _ground->getContentSize().height/2));
     this->addChild(_labelLifeCannon2);
-    
-    // label de sair
-    auto closeItem2 = MenuItemLabel::create(labelExit, CC_CALLBACK_1(HelloWorld::menuCloseCallback, this));
-    
-    closeItem2->setPosition(Vec2(visibleSize.width - 100,
-                                 origin.y + visibleSize.height - _labelLifeCannon2->getContentSize().height));
 
-    // create menu, it's an autorelease object
-    auto menu = Menu::create(closeItem2, NULL);
-    menu->setPosition(Vec2::ZERO);
-    this->addChild(menu, 1);
-                            
     // Adicionando arma do canhao (Player 1)
     _cannon_gun = Sprite::create(cannon_gun_player);
     _cannon_gun->setPosition(Vec2(150 + origin.x, _ground->getBoundingBox().size.height + 80));
@@ -169,41 +176,52 @@ bool HelloWorld::onTouchBegan(Touch* touch, Event* event)
 {
     cocos2d::log("touch began");
     
-    Vec2 touchLocation = touch->getLocation();
-    Vec2 offset = touchLocation - _cannon_gun->getPosition();
+	if (!isCooldown) {
+		isCooldown = true;
 
-    if (offset.x < 0) {
-        return true;
-    }
-    
-    auto bullet = Sprite::create("res/bullet.png");
-    bullet->setPosition(_cannon_gun->getPosition());
-    bullet->setFlippedX(true);
+		Vec2 touchLocation = touch->getLocation();
+		Vec2 offset = touchLocation - _cannon_gun->getPosition();
 
-    // Sobre a colisao
-    auto bulletSize = bullet->getContentSize();
-    auto physicsBody = PhysicsBody::createCircle(bulletSize.width/2);
-    physicsBody->setDynamic(true);
-    physicsBody->setCategoryBitmask((int)PhysicsCategory::Projectile);
-    physicsBody->setCollisionBitmask((int)PhysicsCategory::None);
-    physicsBody->setContactTestBitmask((int)PhysicsCategory::Cannon);
-    bullet->setPhysicsBody(physicsBody);
-    
-    this->addChild(bullet);
-    
-    offset.normalize();
-    auto shootAmount = offset * 1000;
-    
-    auto realDest = shootAmount + bullet->getPosition();
-    
-    auto actionMove = MoveTo::create(2.0f, realDest);
-    auto actionRemove = RemoveSelf::create();
-    bullet->runAction(Sequence::create(actionMove, actionRemove, nullptr));
-    
-    // som do canhao
-    auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
-    audio->playEffect(cannonShotFxFile, false, 1.0f, 1.0f, 1.0f);
+		if (offset.x < 0) {
+			return true;
+		}
 
+		auto bullet = Sprite::create("res/bullet.png");
+		bullet->setPosition(_cannon_gun->getPosition());
+		bullet->setFlippedX(true);
+
+		// Sobre a colisao
+		auto bulletSize = bullet->getContentSize();
+		auto physicsBody = PhysicsBody::createCircle(bulletSize.width / 2);
+		physicsBody->setDynamic(true);
+		physicsBody->setCategoryBitmask((int)PhysicsCategory::Projectile);
+		physicsBody->setCollisionBitmask((int)PhysicsCategory::None);
+		physicsBody->setContactTestBitmask((int)PhysicsCategory::Cannon);
+		bullet->setPhysicsBody(physicsBody);
+
+		this->addChild(bullet);
+
+		offset.normalize();
+		auto shootAmount = offset * 1000;
+
+		auto realDest = shootAmount + bullet->getPosition();
+
+		auto actionMove = MoveTo::create(2.0f, realDest);
+		auto actionRemove = RemoveSelf::create();
+		bullet->runAction(Sequence::create(actionMove, actionRemove, nullptr));
+
+		// som do canhao
+		auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+		audio->playEffect(cannonShotFxFile, false, 1.0f, 1.0f, 1.0f);
+
+		// criando callback, cooldown para próximo tiro
+		auto loading = CallFunc::create(CC_CALLBACK_0(HelloWorld::updateCooldown, this));
+		auto delay = DelayTime::create(cooldownTime);
+		auto sequence = Sequence::create(delay, loading, NULL);
+
+		// executa a sequencia criada
+		this->runAction(sequence);
+	}
     return true;
 }
 
@@ -245,8 +263,7 @@ bool HelloWorld::onContactBegan(PhysicsContact &contact)
         // faz alguma coisa pra mostrar que o jogo acabou...
         _labelWin->setString("Parabens Capitao! Missao Cumprida!");
         
-        
-        /* Menu item pra reiniciar o jogo
+		/* Menu item pra reiniciar o jogo
         auto labelRestart = Label::createWithTTF("Jogar novamente?", "fonts/Marker Felt.ttf", 48);
         labelRestart->setColor(Color3B::WHITE);
         
@@ -258,14 +275,16 @@ bool HelloWorld::onContactBegan(PhysicsContact &contact)
         menuRestart->setPosition(Vec2::ZERO);
         this->addChild(menuRestart);
         */
+       
+		CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic(stageClearMusicFile, false);
         
-        // toca musica da vitoria
-        // baixada de https://www.freesound.org/people/LittleRobotSoundFactory/sounds/321044/
-        auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+		// criando callback, delay de 7 segundos e sequência
+		auto loading = CallFunc::create(CC_CALLBACK_0(HelloWorld::updateScene, this));
+		auto delay = DelayTime::create(7.0f);
+		auto sequence = Sequence::create(delay, loading, NULL);
 
-        // set the background music and play it just once.
-        audio->playBackgroundMusic(victoryFxFile, false);
-        
+		// executa a sequencia criada
+		this->runAction(sequence);
     } else {
         // som da explosao
         auto audioExplosion = CocosDenshion::SimpleAudioEngine::getInstance();
@@ -279,6 +298,43 @@ bool HelloWorld::onContactBegan(PhysicsContact &contact)
     }
     
     return true;
+}
+
+void HelloWorld::updateScene()
+{
+	Director::getInstance()->replaceScene(StageSelectionScene::createScene());
+}
+
+void HelloWorld::updateCooldown()
+{
+	isCooldown = false;
+}
+
+void HelloWorld::pauseGame()
+{
+	isPaused = !(isPaused);
+	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	if (isPaused)
+	{
+		Director::getInstance()->pause();
+		pauseLayer->setVisible(true);
+	}
+	else
+	{
+		pauseLayer->setVisible(false);
+		Director::getInstance()->resume();
+	}
+}
+
+// função para sair da cena
+void HelloWorld::quitGame()
+{
+	pauseLayer->setVisible(false);
+	Director::getInstance()->resume();
+	unscheduleUpdate();
+	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
+	CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic();
+	Director::getInstance()->replaceScene(MenuScene::createScene());
 }
 
 bool HelloWorld::canExplodeTarget()
@@ -302,23 +358,6 @@ bool HelloWorld::canExplodeTarget()
         return true;
     }
     return false;
-}
-
-void HelloWorld::menuCloseCallback(Ref* pSender)
-{
-    //Close the cocos2d-x game scene and quit the application
-    Director::getInstance()->end();
-
-    #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    exit(0);
-#endif
-    
-    /*To navigate back to native iOS screen(if present) without quitting the application  ,do not use Director::getInstance()->end() and exit(0) as given above,instead trigger a custom event created in RootViewController.mm as below*/
-    
-    //EventCustom customEndEvent("game_scene_close_event");
-    //_eventDispatcher->dispatchEvent(&customEndEvent);
-    
-    
 }
 
 void HelloWorld::restartScence(Ref* pSender)

@@ -37,24 +37,24 @@ bool MenuScene::init()
 	label->setColor(Color3B::WHITE);
 	this->addChild(label);
 
-	// item de settings
-	auto settingsItem = MenuItemImage::create(
-		uiSettingsNormal,
-		uiSettingsPressed,
-		this,
-		menu_selector(MenuScene::settingsCallback));
-	settingsItem->setPosition(Vec2(size.width * 0.33f, size.height * 0.25f));
-
 	// item jogar
 	auto playItem = MenuItemImage::create(
 		uiPlayNormal,
 		uiPlayPressed,
 		this,
 		menu_selector(MenuScene::playCallback));
-	playItem->setPosition(Vec2(size.width * 0.66f, size.height * 0.25f));
+	playItem->setPosition(Vec2(size.width * 0.33f, size.height * 0.25f));
+
+	// item de settings
+	auto settingsItem = MenuItemImage::create(
+		uiSettingsNormal,
+		uiSettingsPressed,
+		this,
+		menu_selector(MenuScene::settingsCallback));
+	settingsItem->setPosition(Vec2(size.width * 0.66f, size.height * 0.25f));
 
 	// menu com opções
-	auto menu = Menu::create(settingsItem, playItem, NULL);
+	auto menu = Menu::create(playItem, settingsItem, NULL);
 	menu->setPosition(Vec2::ZERO);
 	this->addChild(menu);
 
