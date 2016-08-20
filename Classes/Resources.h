@@ -51,17 +51,21 @@ static const char victory[] = "interface/victory.png";
 
 // Game Resources
 static const char game_scene_01_floor[] = "res/game_scene_01_floor.png";
+static const char bullet[] = "res/bullet.png";
 static const char cannon_player[] = "res/cannon.png";
 static const char cannon_gun_player[] = "res/cannon_gun.png";
 
 // Sons
 static const char bossMusicFile[] = "sound/Boss.mp3";
 static const char buttonFxFile[] = "sound/Button.mp3";
+static const char cannonShotFxFile[] = "sound/Cannon.mp3";
+static const char explosionFxFile[] = "sound/Explosion.mp3";
 static const char gameOverMusicFile[] = "sound/GameOver.mp3";
 static const char gameResultsMusicFile[] = "sound/GameResults.mp3";
 static const char gameScene_01_01MusicFile[] = "sound/GameScene_01_01.mp3";
 static const char menuSceneMusicFile[] = "sound/MenuScene.mp3";
 static const char sceneSelectionMusicFile[] = "sound/SceneSelection.mp3";
 static const char stageClearMusicFile[] = "sound/StageClear.mp3";
+static const char victoryFxFile[] = "sound/Victory.m4a";
 
 #endif

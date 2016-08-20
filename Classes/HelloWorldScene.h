@@ -2,6 +2,8 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
+#include "PauseLayer.h"
+#include "HudLayer.h"
 
 class HelloWorld : public cocos2d::LayerColor
 {
@@ -23,6 +25,10 @@ public:
     bool onContactBegan(cocos2d::PhysicsContact &contact);
     
     bool canExplodeTarget();
+
+	// layer
+	static HudLayer* hudLayer;
+	static PauseLayer* pauseLayer;
 
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);

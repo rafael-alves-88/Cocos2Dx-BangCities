@@ -43,7 +43,7 @@ bool MenuScene::init()
 		uiSettingsPressed,
 		this,
 		menu_selector(MenuScene::settingsCallback));
-	settingsItem->setPosition(Vec2(size.width * 0.25f, size.height * 0.25f));
+	settingsItem->setPosition(Vec2(size.width * 0.33f, size.height * 0.25f));
 
 	// item jogar
 	auto playItem = MenuItemImage::create(
@@ -51,18 +51,10 @@ bool MenuScene::init()
 		uiPlayPressed,
 		this,
 		menu_selector(MenuScene::playCallback));
-	playItem->setPosition(Vec2(size.width / 2, size.height * 0.25f));
-
-	// item ranking
-	auto rankingItem = MenuItemImage::create(
-		uiRankingNormal,
-		uiRankingPressed,
-		this,
-		menu_selector(MenuScene::rankingCallback));
-	rankingItem->setPosition(Vec2(size.width * 0.75f, size.height * 0.25f));
+	playItem->setPosition(Vec2(size.width * 0.66f, size.height * 0.25f));
 
 	// menu com opções
-	auto menu = Menu::create(settingsItem, playItem, rankingItem, NULL);
+	auto menu = Menu::create(settingsItem, playItem, NULL);
 	menu->setPosition(Vec2::ZERO);
 	this->addChild(menu);
 

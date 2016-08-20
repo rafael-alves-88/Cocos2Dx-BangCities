@@ -3,7 +3,8 @@
 #include "MenuScene.h"
 #include "Resources.h"
 #include "SimpleAudioEngine.h"
-#include "GameScene01.h"
+//#include "GameScene01.h"
+#include "HelloWorldScene.h"
 using namespace CocosDenshion;
 
 Scene* StageSelectionScene::createScene()
@@ -106,7 +107,7 @@ void StageSelectionScene::stage1Callback(Ref* sender)
 {
 	SimpleAudioEngine::sharedEngine()->playEffect(buttonFxFile);
 	SimpleAudioEngine::getInstance()->stopBackgroundMusic();
-	Director::getInstance()->replaceScene(GameScene01::createScene());
+	Director::getInstance()->replaceScene(HelloWorld::createScene());
 }
 
 // transita para a GameScene 2

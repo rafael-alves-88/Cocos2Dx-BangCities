@@ -1,25 +1,34 @@
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
+#include "Resources.h"
+#include "MenuScene.h"
 
 USING_NS_CC;
 
 // contagem de acertos no tanque 2
 int _countHitTarget2;
 
+HudLayer* HelloWorld::hudLayer = NULL;
+PauseLayer* HelloWorld::pauseLayer = NULL;
+
 Scene* HelloWorld::createScene()
 {
-    // 'scene' is an autorelease object
     auto scene = Scene::createWithPhysics();
     scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
-    //scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
-    
-    // 'layer' is an autorelease object
     auto layer = HelloWorld::create();
 
-    // add layer as a child to scene
     scene->addChild(layer);
+
+	auto hLayer = HudLayer::create();
+	hudLayer = hLayer;
+
+	auto pLayer = PauseLayer::create();
+	pauseLayer = pLayer;
+	
+	scene->addChild(hudLayer);
+	scene->addChild(pauseLayer);
+	pauseLayer->setVisible(false);
     
-    // return the scene
     return scene;
 }
 
@@ -40,10 +49,11 @@ bool HelloWorld::init()
         return false;
     }
     
-    //this->setColor(Color3B(51, 153, 255));
-    
     _countHitTarget1 = 0;
     
+	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+	audio->playBackgroundMusic(gameScene_01_01MusicFile, true);
+
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
@@ -51,7 +61,7 @@ bool HelloWorld::init()
     // 2. add a menu item with "X" image, which is clicked to quit the program
     //    you may modify it.
 
-    auto labelExit = Label::createWithTTF("Sair", "fonts/Marker Felt.ttf", 48);
+    auto labelExit = Label::createWithTTF("Sair", font_markerfelt, 48);
 
     /////////////////////////////
     // 3. add your codes below...
@@ -59,8 +69,8 @@ bool HelloWorld::init()
     // add a label shows "Hello World"
     // create and initialize a label
     
-    auto label = Label::createWithTTF("Bang Cities", "fonts/Marker Felt.ttf", 48);
-    
+    auto label = Label::createWithTTF("Bang Cities", font_markerfelt, 48);
+
     // position the label on the center of the screen
     label->setPosition(Vec2(origin.x + visibleSize.width/2,
                             origin.y + visibleSize.height - label->getContentSize().height));
@@ -69,7 +79,7 @@ bool HelloWorld::init()
     this->addChild(label, 1);
     
     // label pra mostrar msg de vitoria
-    _labelWin = Label::createWithTTF("", "fonts/Marker Felt.ttf", 60);
+    _labelWin = Label::createWithTTF("", font_markerfelt, 60);
     _labelWin->setColor(Color3B::BLACK);
     _labelWin->setPosition(Vec2(origin.x + visibleSize.width/2,
                                 origin.y + visibleSize.height/2));
@@ -77,13 +87,13 @@ bool HelloWorld::init()
     this->addChild(_labelWin);
 
     // Adicionando terreno
-    _ground = Sprite::create("res/game_scene_01_floor.png");
+    _ground = Sprite::create(game_scene_01_floor);
     _ground->setAnchorPoint(Vec2(0,0));
     _ground->setPosition(Vec2(0,0));
     this->addChild(_ground, 0);
 
     // label com a porcentagem (vida) do tanque 2
-    _labelLifeCannon2 = Label::createWithTTF("100%", "fonts/Marker Felt.ttf", 48);
+    _labelLifeCannon2 = Label::createWithTTF("100%", font_markerfelt, 48);
     
     _labelLifeCannon2->setPosition(Vec2(visibleSize.width - 100, _ground->getContentSize().height/2));
     this->addChild(_labelLifeCannon2);
@@ -100,23 +110,23 @@ bool HelloWorld::init()
     this->addChild(menu, 1);
                             
     // Adicionando arma do canhao (Player 1)
-    _cannon_gun = Sprite::create("res/cannon_gun.png");
+    _cannon_gun = Sprite::create(cannon_gun_player);
     _cannon_gun->setPosition(Vec2(150 + origin.x, _ground->getBoundingBox().size.height + 80));
     this->addChild(_cannon_gun, 0);
     
     // Adicionando canhao (Player 1)
-    _cannon = Sprite::create("res/cannon.png");
+    _cannon = Sprite::create(cannon_player);
     _cannon->setPosition(Vec2(100 + origin.x, _ground->getBoundingBox().size.height + 35));
     this->addChild(_cannon, 0);
     
     // Adicionando arma do canhao (Player 2 - Maquina)
-    _cannon_gun2 = Sprite::create("res/cannon_gun.png");
+    _cannon_gun2 = Sprite::create(cannon_gun_player);
     _cannon_gun2->setPosition(Vec2(visibleSize.width - 150, _ground->getBoundingBox().size.height + 80));
     _cannon_gun2->setFlippedX(true);
     this->addChild(_cannon_gun2, 0);
 
     // Adicionando canhao (Player 2 - Maquina)
-    _cannon2 = Sprite::create("res/cannon.png");
+    _cannon2 = Sprite::create(cannon_player);
     _cannon2->setPosition(Vec2(visibleSize.width - 100, _ground->getBoundingBox().size.height + 35));
     _cannon2->setFlippedX(true);
     
@@ -166,9 +176,10 @@ bool HelloWorld::onTouchBegan(Touch* touch, Event* event)
         return true;
     }
     
-    auto bullet = Sprite::create("res/Bullet-Bill-icon.png");
+    auto bullet = Sprite::create("res/bullet.png");
     bullet->setPosition(_cannon_gun->getPosition());
     bullet->setFlippedX(true);
+
     // Sobre a colisao
     auto bulletSize = bullet->getContentSize();
     auto physicsBody = PhysicsBody::createCircle(bulletSize.width/2);
@@ -191,7 +202,7 @@ bool HelloWorld::onTouchBegan(Touch* touch, Event* event)
     
     // som do canhao
     auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
-    audio->playEffect("res/sounds/canhao.mp3", false, 1.0f, 1.0f, 1.0f);
+    audio->playEffect(cannonShotFxFile, false, 1.0f, 1.0f, 1.0f);
 
     return true;
 }
@@ -218,7 +229,7 @@ bool HelloWorld::onContactBegan(PhysicsContact &contact)
     if (canExplodeTarget()) {
         // som da explosao
         auto audioExplosion = CocosDenshion::SimpleAudioEngine::getInstance();
-        audioExplosion->playEffect("res/sounds/explosion.mp3", false, 1.0f, 1.0f, 1.0f);
+        audioExplosion->playEffect(explosionFxFile, false, 1.0f, 1.0f, 1.0f);
         
         // explode
         auto particle = ParticleFire::createWithTotalParticles(400);
@@ -253,14 +264,13 @@ bool HelloWorld::onContactBegan(PhysicsContact &contact)
         auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
 
         // set the background music and play it just once.
-        audio->playBackgroundMusic("res/sounds/victory.m4a", false);
+        audio->playBackgroundMusic(victoryFxFile, false);
         
     } else {
         // som da explosao
         auto audioExplosion = CocosDenshion::SimpleAudioEngine::getInstance();
-        audioExplosion->playEffect("res/sounds/explosion.mp3", false, 1.0f, 1.0f, 1.0f);
+        audioExplosion->playEffect(explosionFxFile, false, 1.0f, 1.0f, 1.0f);
         
-
         auto particle = ParticleSmoke::createWithTotalParticles(300);
         particle->setDuration(0.5f);
         particle->setPosition(Vec2(_cannon_gun2->getPosition()));

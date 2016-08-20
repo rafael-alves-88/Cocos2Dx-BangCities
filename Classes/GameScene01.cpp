@@ -5,6 +5,7 @@
 #include "Resources.h"
 #include "Constants.h"
 #include "SimpleAudioEngine.h"
+
 using namespace CocosDenshion;
 
 GameScene01* GameScene01::instance = NULL;
